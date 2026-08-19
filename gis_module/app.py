@@ -2014,20 +2014,17 @@ with analytics_tab:
     )
 
 
-    table = analytics_data[
-        [
-            "name",
-            "destination",
-            "vehicle",
-            "risk",
-            "water_cm",
-            "department",
-            "status",
-            "distance_km",
-            "duration_min",
-            "source"
-        ]
-    ].copy()
+   table = analytics_data[
+    [
+        "name",
+        "risk",
+        "water_cm",
+        "department",
+        "status",
+        "source"
+    ]
+].copy()
+ 
 
 
     table.columns = [
