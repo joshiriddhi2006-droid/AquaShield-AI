@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>My Complaints — AquaShield</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      .stat-card {
+        transition: all 0.25s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .complaint-card {
+        transition: all 0.25s ease;
+      }
+
+      .complaint-card:hover {
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300"
+  >
+    <!-- =========================================================
+       NAVBAR
+  ========================================================== -->
+
+    <nav
+      class="bg-white/90 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50"
+    >
+      <div
+        class="max-w-6xl mx-auto px-5 py-4 flex justify-between items-center"
+      >
+        <!-- LOGO -->
+
+        <a href="index.html" class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-sky-500/10 dark:bg-sky-500/20 border border-sky-400/30 flex items-center justify-center text-sky-500"
+          >
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+
+          <div>
+            <div class="font-extrabold text-lg text-slate-900 dark:text-white">
+              AquaShield
+            </div>
+
+            <div class="text-[10px] text-sky-500 font-semibold">
+              Citizen Safety Portal
+            </div>
+          </div>
+        </a>
+
+        <!-- NAV LINKS -->
+
+        <div class="flex items-center gap-4 text-sm font-semibold">
+          <a
+            href="index.html"
+            class="text-slate-500 dark:text-slate-300 hover:text-sky-500 transition"
+          >
+            <i class="fa-solid fa-house mr-1"></i>
+            Home
+          </a>
+
+          <a
+            href="complaint.html"
+            class="text-slate-500 dark:text-slate-300 hover:text-sky-500 transition"
+          >
+            <i class="fa-solid fa-plus-circle mr-1"></i>
+            Register Complaint
+          </a>
+
+          <a href="profile.html" class="text-sky-500 font-bold">
+            <i class="fa-solid fa-user mr-1"></i>
+            My Complaints
+          </a>
+
+          <button
+            id="theme-toggle"
+            type="button"
+            class="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700"
+            title="Toggle theme"
+          >
+            <i id="theme-icon" class="fa-solid fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- =========================================================
+       MAIN CONTENT
+  ========================================================== -->
+
+    <main class="max-w-6xl mx-auto px-5 py-8">
+      <!-- PAGE HEADER -->
+
+      <section
+        class="bg-gradient-to-br from-slate-900 via-sky-950 to-slate-950 rounded-2xl p-7 md:p-8 text-white shadow-xl border border-sky-500/20 mb-7"
+      >
+        <div
+          class="flex flex-col md:flex-row md:items-center md:justify-between gap-5"
+        >
+          <div>
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-900/60 border border-sky-400/30 text-sky-300 text-[11px] font-bold mb-3"
+            >
+              <i class="fa-solid fa-location-dot"></i>
+
+              Citizen Complaint Tracking
+            </div>
+
+            <h1 class="text-3xl font-extrabold">My Complaints</h1>
+
+            <p class="text-sm text-slate-300 mt-2 max-w-2xl">
+              Track your registered waterlogging and flood-related complaints
+              and monitor their current status.
+            </p>
+          </div>
+
+          <a
+            href="complaint.html"
+            class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-sm transition"
+          >
+            <i class="fa-solid fa-plus"></i>
+
+            Register New Complaint
+          </a>
+        </div>
+      </section>
+
+      <!-- =========================================================
+         CITIZEN INFORMATION
+    ========================================================== -->
+
+      <section
+        class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 mb-7 shadow-sm"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-14 h-14 rounded-full bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-500 text-xl"
+          >
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div>
+            <div
+              id="user-name"
+              class="font-extrabold text-lg text-slate-900 dark:text-white"
+            >
+              Citizen
+            </div>
+
+            <div
+              id="user-email"
+              class="text-xs text-slate-500 dark:text-slate-400 mt-1"
+            >
+              AquaShield Citizen Account
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+         COMPLAINT OVERVIEW
+    ========================================================== -->
+
+      <section class="mb-8">
+        <div
+          class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5"
+        >
+          <div>
+            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
+              Complaint Overview
+            </h2>
+
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Current AquaShield complaint statistics
+            </p>
+          </div>
+
+          <div
+            id="stats-status"
+            class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2"
+          >
+            <span
+              id="stats-dot"
+              class="w-2 h-2 rounded-full bg-slate-400"
+            ></span>
+
+            Loading statistics...
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- TOTAL -->
+
+          <div
+            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+
+            <div
+              id="stat-total"
+              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
+            >
+              —
+            </div>
+
+            <div class="text-xs text-slate-500 dark:text-slate-400">
+              Total complaints
+            </div>
+          </div>
+
+          <!-- REGISTERED -->
+
+          <div
+            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-inbox"></i>
+            </div>
+
+            <div
+              id="stat-registered"
+              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
+            >
+              —
+            </div>
+
+            <div class="text-xs text-slate-500 dark:text-slate-400">
+              Registered
+            </div>
+          </div>
+
+          <!-- ACTIVE -->
+
+          <div
+            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+
+            <div
+              id="stat-active"
+              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
+            >
+              —
+            </div>
+
+            <div class="text-xs text-slate-500 dark:text-slate-400">
+              Under response
+            </div>
+          </div>
+
+          <!-- SOLVED -->
+
+          <div
+            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center"
+            >
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div
+              id="stat-solved"
+              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
+            >
+              —
+            </div>
+
+            <div class="text-xs text-slate-500 dark:text-slate-400">
+              Resolved
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+         YOUR COMPLAINTS
+    ========================================================== -->
+
+      <section>
+        <div class="mb-5">
+          <h2
+            class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2"
+          >
+            <i class="fa-solid fa-list-check text-sky-500"></i>
+
+            Your Complaints
+          </h2>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Track the complaints registered through AquaShield.
+          </p>
+        </div>
+
+        <!--
+        IMPORTANT:
+        Existing app.js uses this ID.
+      -->
+
+        <div id="user-complaints" class="space-y-4">
+          <div
+            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center"
+          >
+            <div
+              class="w-14 h-14 mx-auto rounded-full bg-sky-500/10 text-sky-500 flex items-center justify-center text-xl mb-3"
+            >
+              <i class="fa-solid fa-file-circle-question"></i>
+            </div>
+
+            <h3 class="font-bold text-slate-900 dark:text-white">
+              Your complaint history
+            </h3>
+
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Your registered complaints will appear here.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+         HOW IT WORKS
+    ========================================================== -->
+
+      <section
+        class="mt-8 bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900 rounded-2xl p-5"
+      >
+        <div class="flex gap-3">
+          <div class="text-sky-500 text-lg">
+            <i class="fa-solid fa-circle-info"></i>
+          </div>
+
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white">
+              How AquaShield complaint tracking works
+            </h3>
+
+            <p
+              class="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed"
+            >
+              Submit your complaint through AquaShield AI. The AI analyses the
+              problem, identifies the appropriate department and priority, and
+              forwards the complaint to the Authority Dashboard. The complaint
+              status can then be tracked through the AquaShield system.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+         BACK HOME
+    ========================================================== -->
+
+      <div class="text-center mt-8 mb-4">
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 text-sm font-bold text-sky-600 dark:text-sky-400 hover:underline"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+
+          Back to AquaShield Home
+        </a>
+      </div>
+    </main>
+
+    <!-- =========================================================
+       EXISTING JAVASCRIPT
+  ========================================================== -->
+
+    <script src="js/app.js"></script>
+
+    <script src="js/complaint.js"></script>
+
+    <!-- =========================================================
+       PUBLIC STATISTICS
+  ========================================================== -->
+
+    <script>
+      async function loadProfileStatistics() {
+        const status = document.getElementById("stats-status");
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:5000/api/public-stats",
+            {
+              method: "GET",
+              cache: "no-store",
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error("Statistics API unavailable");
+          }
+
+          const data = await response.json();
+
+          document.getElementById("stat-total").textContent = data.total ?? 0;
+
+          document.getElementById("stat-registered").textContent =
+            data.registered ?? 0;
+
+          document.getElementById("stat-active").textContent = data.active ?? 0;
+
+          document.getElementById("stat-solved").textContent = data.solved ?? 0;
+
+          status.innerHTML =
+            '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>' +
+            " Live statistics";
+        } catch (error) {
+          console.error("Profile statistics error:", error);
+
+          status.innerHTML =
+            '<span class="w-2 h-2 rounded-full bg-rose-400"></span>' +
+            " Statistics unavailable";
+
+          document.getElementById("stat-total").textContent = "—";
+
+          document.getElementById("stat-registered").textContent = "—";
+
+          document.getElementById("stat-active").textContent = "—";
+
+          document.getElementById("stat-solved").textContent = "—";
+        }
+      }
+
+      loadProfileStatistics();
+
+      setInterval(loadProfileStatistics, 30000);
+    </script>
+
+    <!-- =========================================================
+       THEME
+  ========================================================== -->
+
+    <script>
+      const themeToggle = document.getElementById("theme-toggle");
+
+      const themeIcon = document.getElementById("theme-icon");
+
+      function updateThemeIcon() {
+        if (document.documentElement.classList.contains("dark")) {
+          themeIcon.className = "fa-solid fa-sun text-amber-400";
+        } else {
+          themeIcon.className = "fa-solid fa-moon text-slate-600";
+        }
+      }
+
+      const savedTheme = localStorage.getItem("color-theme");
+
+      if (savedTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+
+      if (savedTheme === "light") {
+        document.documentElement.classList.remove("dark");
+      }
+
+      updateThemeIcon();
+
+      themeToggle.addEventListener("click", function () {
+        document.documentElement.classList.toggle("dark");
+
+        const isDark = document.documentElement.classList.contains("dark");
+
+        localStorage.setItem("color-theme", isDark ? "dark" : "light");
+
+        updateThemeIcon();
+      });
+    </script>
+  </body>
+</html>

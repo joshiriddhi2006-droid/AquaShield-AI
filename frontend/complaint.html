@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AquaShield AI - AI Complaint Assistant</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+    <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+    <nav class="bg-slate-900 text-white py-4 px-6 shadow-md">
+      <div class="max-w-6xl mx-auto flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center text-xl"
+        >
+          🛡️
+        </div>
+
+        <div>
+          <h1 class="font-bold text-lg">AquaShield AI</h1>
+
+          <p class="text-xs text-slate-400">AI Complaint Assistant</p>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-3xl mx-auto py-8 px-4">
+      <!-- ===================================================
+         SUCCESS MESSAGE
+    ==================================================== -->
+
+      <div
+        id="successAlert"
+        class="hidden mb-5 p-4 bg-emerald-50 border border-emerald-200 rounded-xl shadow-sm"
+      >
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-circle-check text-2xl text-emerald-500"></i>
+
+          <div>
+            <h3 class="font-bold text-emerald-800">
+              Complaint Submitted Successfully!
+            </h3>
+
+            <p class="text-sm text-emerald-700">
+              Complaint ID:
+              <span id="refId" class="font-bold font-mono"></span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================
+         CHAT CARD
+    ==================================================== -->
+
+      <section
+        class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden"
+      >
+        <!-- HEADER -->
+
+        <div class="bg-gradient-to-r from-blue-900 to-slate-900 text-white p-6">
+          <h2 class="text-2xl font-extrabold flex items-center gap-2">
+            <i class="fa-solid fa-robot text-cyan-300"></i>
+
+            AquaShield AI Assistant
+          </h2>
+
+          <p class="text-sm text-slate-300 mt-1">
+            Describe your water/flood problem in one message. AI will analyse
+            and route your complaint.
+          </p>
+        </div>
+
+        <!-- CHAT AREA -->
+
+        <div
+          id="chat"
+          class="p-5 h-[430px] overflow-y-auto space-y-3 bg-slate-50"
+        ></div>
+
+        <!-- INPUT -->
+
+        <div class="border-t border-slate-200 p-4 bg-white">
+          <div class="flex gap-2">
+            <input
+              id="chatInput"
+              type="text"
+              autocomplete="off"
+              placeholder="Type your complete complaint..."
+              class="flex-1 px-4 py-3 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+
+            <button
+              id="sendBtn"
+              type="button"
+              class="px-5 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+
+          <p class="text-xs text-slate-400 mt-2">
+            Example: "My road is severely flooded and vehicles cannot pass near
+            Railway Station, Ujjain."
+          </p>
+        </div>
+      </section>
+
+      <!-- ===================================================
+         AI ANALYSIS
+    ==================================================== -->
+
+      <section
+        id="aiResult"
+        class="hidden mt-5 bg-white border border-slate-200 rounded-2xl shadow-lg p-5"
+      >
+        <h3 class="font-bold text-lg mb-4">🤖 AI Analysis</h3>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+          <div class="p-4 bg-blue-50 rounded-xl">
+            <div class="font-bold">Category</div>
+
+            <div id="rCategory">—</div>
+          </div>
+
+          <div class="p-4 bg-cyan-50 rounded-xl">
+            <div class="font-bold">Department</div>
+
+            <div id="rDepartment">—</div>
+          </div>
+
+          <div class="p-4 bg-amber-50 rounded-xl">
+            <div class="font-bold">Priority</div>
+
+            <div id="rPriority">—</div>
+          </div>
+
+          <div class="p-4 bg-red-50 rounded-xl">
+            <div class="font-bold">Severity</div>
+
+            <div id="rSeverity">—</div>
+          </div>
+        </div>
+
+        <button
+          id="confirmBtn"
+          type="button"
+          class="mt-5 w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-xl hover:opacity-95"
+        >
+          <i class="fa-solid fa-paper-plane"></i>
+
+          Confirm & Submit Complaint
+        </button>
+      </section>
+    </main>
+
+    <script>
+      /* ==========================================================
+   API CONFIGURATION
+========================================================== */
+
+      const AI_API = "http://127.0.0.1:8000/predict";
+
+      const AUTHORITY_API = "http://127.0.0.1:5000/api/incidents";
+
+      /* ==========================================================
+   ELEMENTS
+========================================================== */
+
+      const chat = document.getElementById("chat");
+
+      const input = document.getElementById("chatInput");
+
+      const sendBtn = document.getElementById("sendBtn");
+
+      const resultBox = document.getElementById("aiResult");
+
+      const confirmBtn = document.getElementById("confirmBtn");
+
+      /* ==========================================================
+   COMPLAINT STATE
+========================================================== */
+
+      let complaint = {
+        description: "",
+
+        location: "",
+
+        type: "",
+
+        depth: "",
+
+        water_cm: null,
+      };
+
+      let aiData = null;
+
+      /* ==========================================================
+   CHAT MESSAGE
+========================================================== */
+
+      function addMessage(text, who = "bot") {
+        const row = document.createElement("div");
+
+        row.className =
+          who === "bot" ? "flex justify-start" : "flex justify-end";
+
+        const bubble = document.createElement("div");
+
+        bubble.className =
+          who === "bot"
+            ? "max-w-[85%] bg-white border border-slate-200 rounded-2xl rounded-tl-sm px-4 py-3 text-sm shadow-sm"
+            : "max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-tr-sm px-4 py-3 text-sm shadow-sm";
+
+        bubble.innerText = text;
+
+        row.appendChild(bubble);
+
+        chat.appendChild(row);
+
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      /* ==========================================================
+   INITIAL MESSAGE
+========================================================== */
+
+      function botStart() {
+        addMessage(
+          "Hello! I'm AquaShield AI Assistant. I'll help you register your flood/water hazard complaint.",
+        );
+
+        addMessage(
+          "Describe the complete problem in one message if possible. If something important is missing, I'll ask only for that information.",
+        );
+      }
+
+      botStart();
+
+      /* ==========================================================
+   NORMALIZE
+========================================================== */
+
+      function normalize(text) {
+        return String(text || "")
+          .toLowerCase()
+          .replace(/[!?]+/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      /* ==========================================================
+   ISSUE DETECTION
+========================================================== */
+
+      function detectIssue(text) {
+        const t = normalize(text);
+
+        if (
+          /\b(waterlogging|waterlogged|flooding|flooded|flood|water accumulation|water overflow|drain overflow|drainage|sewage|submerged|blocked drain|water on road)\b/i.test(
+            t,
+          )
+        ) {
+          return "Waterlogging";
+        }
+
+        if (
+          /\b(pothole|damaged road|broken road|unsafe road|road damage)\b/i.test(
+            t,
+          )
+        ) {
+          return "Road Infrastructure";
+        }
+
+        if (/\b(open manhole|manhole|sewer hazard|open sewer)\b/i.test(t)) {
+          return "Road Infrastructure";
+        }
+
+        if (
+          /\b(traffic blocked|traffic affected|vehicles blocked)\b/i.test(t)
+        ) {
+          return "Traffic Safety";
+        }
+
+        return "";
+      }
+
+      /* ==========================================================
+   LOCATION DETECTION
+========================================================== */
+
+      function detectLocation(text) {
+        const original = String(text || "").trim();
+
+        /*
+         * Explicit phrases:
+         * near Railway Station
+         * at MG Road
+         * on Ring Road
+         * around Vijay Nagar
+         */
+
+        const phraseMatch = original.match(
+          /\b(?:near|at|on|around|beside|behind|opposite|outside|towards)\s+([^,.!?;]+)/i,
+        );
+
+        if (phraseMatch) {
+          let location = phraseMatch[1]
+            .trim()
+            .replace(/\b(and|where|because|while|but)\b.*$/i, "")
+            .trim();
+
+          if (
+            location.length >= 3 &&
+            !/^(the road|my road|this road|our road|there|here)$/i.test(
+              location,
+            )
+          ) {
+            return location;
+          }
+        }
+
+        /*
+         * Road / Street / Station etc.
+         */
+
+        const structuredMatch = original.match(
+          /\b[A-Za-z0-9][A-Za-z0-9' .-]{2,}(?:Road|Street|Square|Junction|Station|Hospital|Market|Nagar|Chowk|Crossing|Bypass|Highway|Circle|Bus Stand|Airport|Colony)\b(?:,\s*[A-Za-z .-]+)?/i,
+        );
+
+        if (structuredMatch) {
+          return structuredMatch[0].trim().replace(/[,.]+$/, "");
+        }
+
+        /*
+         * Explicit location label.
+         */
+
+        const labelledMatch = original.match(
+          /\b(?:location|area|place|road|street)\s*[:=-]\s*([^,.!?;]+)/i,
+        );
+
+        if (labelledMatch) {
+          const location = labelledMatch[1].trim();
+
+          if (
+            location.length >= 3 &&
+            !/^(flooded|flooding|waterlogged|blocked|damaged|unsafe|is|was|has|has been)$/i.test(
+              location,
+            )
+          ) {
+            return location;
+          }
+        }
+
+        /*
+         * Common cities.
+         */
+
+        const cityMatch = original.match(
+          /\b(Indore|Ujjain|Bhopal|Mumbai|Pune|Delhi|Jaipur|Bengaluru|Bangalore|Hyderabad|Ahmedabad|Nagpur|Nashik|Surat|Kolkata|Chennai|Lucknow|Kanpur|Agra|Noida|Gurugram|Gurgaon|Chandigarh|Patna|Ranchi|Raipur|Vadodara|Mysuru|Mysore)\b/i,
+        );
+
+        if (cityMatch) {
+          return cityMatch[0];
+        }
+
+        return "";
+      }
+
+      /* ==========================================================
+   WATER DEPTH
+========================================================== */
+
+      function detectWaterDepth(text) {
+        const match = String(text || "").match(
+          /(\d+(?:\.\d+)?)\s*(cm|centimeter|centimeters|metre|metres|meter|meters|m)\b/i,
+        );
+
+        if (!match) {
+          return null;
+        }
+
+        let value = parseFloat(match[1]);
+
+        const unit = match[2].toLowerCase();
+
+        if (unit === "m" || unit.includes("meter") || unit.includes("metre")) {
+          value = value * 100;
+        }
+
+        return value;
+      }
+
+      /* ==========================================================
+   SEVERITY DETECTION
+========================================================== */
+
+      function detectSeverity(text) {
+        const t = normalize(text);
+
+        /*
+         * HIGH
+         */
+
+        if (
+          /\b(critical|emergency|extremely severe|extremely dangerous|ambulance cannot pass|ambulance can't pass|emergency vehicle cannot pass|emergency vehicle can't pass|vehicles cannot pass|vehicles can't pass|cannot pass|can't pass|completely blocked|completely submerged|deeply flooded|very deep|severe flooding|severely flooded|dangerously flooded|heavy flooding|high risk|high severity)\b/i.test(
+            t,
+          )
+        ) {
+          return "High";
+        }
+
+        /*
+         * Explicit HIGH.
+         */
+
+        if (/\bhigh\b/i.test(t)) {
+          return "High";
+        }
+
+        /*
+         * MEDIUM
+         */
+
+        if (
+          /\b(moderate|medium|significant|serious|difficult to cross|difficult to pass|partially blocked|heavy)\b/i.test(
+            t,
+          )
+        ) {
+          return "Medium";
+        }
+
+        /*
+         * LOW
+         */
+
+        if (
+          /\b(low|low risk|low severity|minor|slight|little|shallow|mild)\b/i.test(
+            t,
+          )
+        ) {
+          return "Low";
+        }
+
+        /*
+         * Infer from water depth.
+         */
+
+        const depth = detectWaterDepth(text);
+
+        if (depth !== null) {
+          if (depth >= 35) {
+            return "High";
+          }
+
+          if (depth >= 15) {
+            return "Medium";
+          }
+
+          return "Low";
+        }
+
+        return "";
+      }
+
+      /* ==========================================================
+   EMERGENCY DETECTION
+========================================================== */
+
+      function hasEmergencyImpact(text) {
+        return /\b(ambulance|emergency vehicle|fire truck|rescue vehicle|cannot pass|can't pass|trapped|stranded|completely blocked)\b/i.test(
+          text,
+        );
+      }
+
+      /* ==========================================================
+   EXTRACT DATA
+========================================================== */
+
+      function extractComplaintData(text) {
+        const issue = detectIssue(text);
+
+        const location = detectLocation(text);
+
+        const water = detectWaterDepth(text);
+
+        let severity = detectSeverity(text);
+
+        if (hasEmergencyImpact(text)) {
+          severity = "High";
+        }
+
+        return {
+          issue,
+
+          location,
+
+          water,
+
+          severity,
+        };
+      }
+
+      /* ==========================================================
+   MERGE DATA
+========================================================== */
+
+      function mergeComplaintData(data) {
+        if (data.issue) {
+          complaint.type = data.issue;
+        }
+
+        if (data.location) {
+          complaint.location = data.location;
+        }
+
+        if (data.water !== null) {
+          complaint.water_cm = data.water;
+        }
+
+        if (data.severity) {
+          complaint.depth = data.severity;
+        }
+      }
+
+      /* ==========================================================
+   INFORMATION CHECK
+========================================================== */
+
+      function hasEnoughInformation(data) {
+        if (!data.issue) {
+          return false;
+        }
+
+        if (!data.location || data.location.trim().length < 3) {
+          return false;
+        }
+
+        if (!data.severity && data.water === null) {
+          return false;
+        }
+
+        return true;
+      }
+
+      /* ==========================================================
+   ASK ONLY FOR MISSING DETAILS
+========================================================== */
+
+      function askForMissingInformation(data) {
+        if (!data.issue) {
+          addMessage(
+            "What is the problem? Please describe the water or flood hazard.",
+          );
+
+          return;
+        }
+
+        if (!data.location) {
+          addMessage(
+            "📍 Which road or location is affected? Please provide the road name, area, landmark, or city.",
+          );
+
+          return;
+        }
+
+        if (!data.severity && data.water === null) {
+          addMessage(
+            "⚠️ How serious is the situation? You can say Low, Medium, or High, give the water depth, or mention if vehicles or emergency services cannot pass.",
+          );
+
+          return;
+        }
+
+        analyzeComplaint();
+      }
+
+      /* ==========================================================
+   AI ANALYSIS
+========================================================== */
+
+      async function analyzeComplaint() {
+        addMessage(
+          "Thanks. I have enough information. I'm analysing your complete complaint with AquaShield AI...",
+        );
+
+        const aiComplaint =
+          "Original Citizen Complaint: " +
+          complaint.description +
+          "\nDetected Location: " +
+          (complaint.location || "Not specified") +
+          "\nDetected Issue: " +
+          (complaint.type || "Not specified") +
+          "\nDetected Water Depth: " +
+          (complaint.water_cm !== null
+            ? complaint.water_cm + " cm"
+            : "Not specified") +
+          "\nDetected Severity: " +
+          (complaint.depth || "Not specified");
+
+        try {
+          const response = await fetch(AI_API, {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              complaint: aiComplaint,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("AI API returned HTTP " + response.status);
+          }
+
+          const data = await response.json();
+
+          aiData = data;
+
+          /*
+           * Respect what the citizen explicitly said.
+           */
+
+          const explicitLow =
+            /\b(low|low risk|low severity|minor|slight|mild|shallow)\b/i.test(
+              complaint.description,
+            );
+
+          const explicitMedium =
+            /\b(medium|medium risk|medium severity|moderate)\b/i.test(
+              complaint.description,
+            );
+
+          const explicitHigh =
+            /\b(high|high risk|high severity|severe|severely|critical|dangerous|ambulance|emergency|cannot pass|can't pass|trapped|stranded)\b/i.test(
+              complaint.description,
+            );
+
+          if (explicitLow) {
+            aiData.priority = "Low";
+
+            aiData.severity = "Low";
+          } else if (explicitHigh) {
+            aiData.priority = "High";
+
+            aiData.severity = "High";
+          } else if (explicitMedium) {
+            aiData.priority = "Medium";
+
+            aiData.severity = "Medium";
+          }
+
+          document.getElementById("rCategory").innerText =
+            aiData.category || complaint.type || "Flood / Water Hazard";
+
+          document.getElementById("rDepartment").innerText =
+            aiData.department || "Emergency Control";
+
+          document.getElementById("rPriority").innerText =
+            aiData.priority || complaint.depth || "Medium";
+
+          document.getElementById("rSeverity").innerText =
+            aiData.severity || complaint.depth || "Medium";
+
+          resultBox.classList.remove("hidden");
+
+          addMessage(
+            "AI analysis complete: " +
+              (aiData.category || complaint.type || "Flood / Water Hazard") +
+              ", routed to " +
+              (aiData.department || "Emergency Control") +
+              ", priority " +
+              (aiData.priority || complaint.depth || "Medium") +
+              ", severity " +
+              (aiData.severity || complaint.depth || "Medium") +
+              ".",
+          );
+
+          addMessage(
+            "Please review the AI result below and confirm submission.",
+          );
+        } catch (error) {
+          console.error("AI ERROR:", error);
+
+          addMessage(
+            "I could not reach the AI service. Please make sure the AI API is running on port 8000.",
+          );
+        }
+      }
+
+      /* ==========================================================
+   INPUT HANDLER
+========================================================== */
+
+      function handleInput() {
+        const value = input.value.trim();
+
+        if (!value) {
+          return;
+        }
+
+        addMessage(value, "user");
+
+        input.value = "";
+
+        if (aiData) {
+          addMessage(
+            "Your complaint has already been analysed. Please use Confirm & Submit Complaint.",
+          );
+
+          return;
+        }
+
+        /*
+         * FIRST MESSAGE
+         */
+
+        if (!complaint.description) {
+          complaint.description = value;
+
+          const data = extractComplaintData(value);
+
+          mergeComplaintData(data);
+
+          if (hasEnoughInformation(data)) {
+            analyzeComplaint();
+
+            return;
+          }
+
+          askForMissingInformation(data);
+
+          return;
+        }
+
+        /*
+         * FOLLOW-UP ANSWER
+         */
+
+        complaint.description = (complaint.description + " " + value).trim();
+
+        const combinedData = extractComplaintData(complaint.description);
+
+        mergeComplaintData(combinedData);
+
+        if (hasEnoughInformation(combinedData)) {
+          analyzeComplaint();
+
+          return;
+        }
+
+        askForMissingInformation(combinedData);
+      }
+
+      /* ==========================================================
+   SEND BUTTON
+========================================================== */
+
+      sendBtn.addEventListener("click", handleInput);
+
+      /* ==========================================================
+   ENTER KEY
+========================================================== */
+
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+
+          handleInput();
+        }
+      });
+
+      /* ==========================================================
+   CONFIRM & SUBMIT
+========================================================== */
+
+      confirmBtn.addEventListener("click", async function () {
+        if (!aiData) {
+          alert(
+            "Please complete the complaint and wait for AI analysis first.",
+          );
+
+          return;
+        }
+
+        const btn = this;
+
+        btn.disabled = true;
+
+        btn.innerHTML =
+          '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+        /*
+         * Water depth for Authority Dashboard.
+         */
+
+        let water = complaint.water_cm;
+
+        if (water === null) {
+          if (complaint.depth === "High") {
+            water = 50;
+          } else if (complaint.depth === "Medium") {
+            water = 25;
+          } else {
+            water = 10;
+          }
+        }
+
+        /*
+         * Authority description.
+         */
+
+        const description =
+          complaint.description +
+          " | AI Category: " +
+          (aiData.category || complaint.type || "Flood / Water Hazard") +
+          " | AI Department: " +
+          (aiData.department || "Emergency Control") +
+          " | AI Priority: " +
+          (aiData.priority || complaint.depth || "Medium") +
+          " | AI Severity: " +
+          (aiData.severity || complaint.depth || "Medium");
+
+        try {
+          /* ====================================================
+         SEND TO AUTHORITY DASHBOARD
+      ==================================================== */
+
+          const response = await fetch(AUTHORITY_API, {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              location: complaint.location || "Location mentioned in complaint",
+
+              type: aiData.department || "Emergency Control",
+
+              depth: complaint.depth || "Medium",
+
+              water: water,
+
+              description: description,
+
+              complaint: complaint.description,
+
+              category:
+                aiData.category || complaint.type || "Flood / Water Hazard",
+
+              priority: aiData.priority || complaint.depth || "Medium",
+
+              severity: aiData.severity || complaint.depth || "Medium",
+
+              timestamp: new Date().toISOString(),
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Authority API returned HTTP " + response.status);
+          }
+
+          const authorityData = await response.json();
+
+          console.log("AUTHORITY RESPONSE:", authorityData);
+
+          if (authorityData.success === false) {
+            throw new Error(
+              authorityData.message || "Authority submission failed",
+            );
+          }
+
+          /* ====================================================
+         COMPLAINT ID
+      ==================================================== */
+
+          const authorityId =
+            authorityData.incident && authorityData.incident.id
+              ? authorityData.incident.id
+              : Date.now();
+
+          const complaintId = "AQ-" + String(authorityId);
+
+          /* ====================================================
+         CURRENT USER
+      ==================================================== */
+
+          let user = null;
+
+          try {
+            user = JSON.parse(localStorage.getItem("user") || "null");
+          } catch (error) {
+            user = null;
+          }
+
+          /*
+           * If no citizen account exists,
+           * create a demo citizen identity.
+           */
+
+          if (!user || !user.email) {
+            user = {
+              name: "AquaShield Citizen",
+
+              email: "citizen@aquashield.local",
+
+              password: "",
+            };
+
+            localStorage.setItem("user", JSON.stringify(user));
+          }
+
+          /* ====================================================
+         EXISTING COMPLAINTS
+      ==================================================== */
+
+          let complaints = [];
+
+          try {
+            complaints = JSON.parse(localStorage.getItem("complaints") || "[]");
+
+            if (!Array.isArray(complaints)) {
+              complaints = [];
+            }
+          } catch (error) {
+            complaints = [];
+          }
+
+          /* ====================================================
+         SAVE COMPLAINT
+      ==================================================== */
+
+          const savedComplaint = {
+            id: complaintId,
+
+            userEmail: user.email,
+
+            userName: user.name || "AquaShield Citizen",
+
+            title:
+              aiData.category || complaint.type || "Water / Flood Complaint",
+
+            description: complaint.description,
+
+            location: complaint.location || "Location not provided",
+
+            images: [],
+
+            status: "Submitted",
+
+            submittedAt: new Date().toISOString(),
+
+            aiAnalysis: {
+              category:
+                aiData.category || complaint.type || "Flood / Water Hazard",
+
+              department: aiData.department || "Emergency Control",
+
+              priority: aiData.priority || complaint.depth || "Medium",
+
+              severity: aiData.severity || complaint.depth || "Medium",
+            },
+          };
+
+          complaints.unshift(savedComplaint);
+
+          localStorage.setItem("complaints", JSON.stringify(complaints));
+
+          localStorage.setItem("lastComplaintId", complaintId);
+
+          console.log("AquaShield saved complaint:", savedComplaint);
+
+          console.log("All complaints:", complaints);
+
+          /* ====================================================
+         SUCCESS
+      ==================================================== */
+
+          document.getElementById("refId").innerText = complaintId;
+
+          document.getElementById("successAlert").classList.remove("hidden");
+
+          resultBox.classList.add("hidden");
+
+          /*
+           * Reset chatbot.
+           */
+
+          chat.innerHTML = "";
+
+          complaint = {
+            description: "",
+
+            location: "",
+
+            type: "",
+
+            depth: "",
+
+            water_cm: null,
+          };
+
+          aiData = null;
+
+          botStart();
+
+          window.scrollTo({
+            top: 0,
+
+            behavior: "smooth",
+          });
+
+          /* ====================================================
+         OPEN GIS IN NEW TAB
+      ==================================================== */
+
+          try {
+            const gisUrl =
+              "http://localhost:8501/?" +
+              "category=" +
+              encodeURIComponent(savedComplaint.aiAnalysis.category) +
+              "&title=" +
+              encodeURIComponent(savedComplaint.aiAnalysis.category);
+
+            window.open(gisUrl, "_blank");
+          } catch (gisError) {
+            console.log("GIS could not be opened:", gisError);
+          }
+        } catch (error) {
+          console.error("SUBMISSION ERROR:", error);
+
+          alert("Complaint submission failed: " + error.message);
+        } finally {
+          btn.disabled = false;
+
+          btn.innerHTML =
+            '<i class="fa-solid fa-paper-plane"></i> Confirm & Submit Complaint';
+        }
+      });
+    </script>
+  </body>
+</html>

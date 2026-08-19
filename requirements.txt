@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-multipart
+scikit-learn
+Flask>=3.0,<4.0
+flask-cors
+streamlit
+pandas
+folium
+streamlit-folium
+plotly
+requests

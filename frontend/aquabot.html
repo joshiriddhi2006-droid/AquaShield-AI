@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AquaBot — AquaShield AI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .chat-scroll {
+        scrollbar-width: thin;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-950 text-white min-h-screen">
+    <!-- HEADER -->
+    <header class="bg-slate-900 border-b border-slate-800">
+      <div
+        class="max-w-4xl mx-auto px-5 py-5 flex items-center justify-between"
+      >
+        <a href="index.html" class="flex items-center gap-3">
+          <div
+            class="w-11 h-11 rounded-xl bg-cyan-500/20 border border-cyan-400/30 flex items-center justify-center text-cyan-400 text-xl"
+          >
+            🤖
+          </div>
+
+          <div>
+            <h1 class="text-xl font-extrabold">AquaBot</h1>
+
+            <p class="text-xs text-slate-400">AquaShield Safety Assistant</p>
+          </div>
+        </a>
+
+        <a
+          href="index.html"
+          class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm"
+        >
+          <i class="fa-solid fa-house mr-1"></i>
+          Home
+        </a>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+      <div
+        class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl"
+      >
+        <!-- BOT HEADER -->
+        <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-6 py-5">
+          <h2 class="text-xl font-extrabold">🤖 AquaBot Assistant</h2>
+
+          <p class="text-sm text-cyan-100 mt-1">
+            Ask about flood safety, water levels, routes and emergency
+            conditions.
+          </p>
+        </div>
+
+        <!-- CHAT -->
+        <div
+          id="chat"
+          class="chat-scroll h-[55vh] overflow-y-auto p-5 space-y-4"
+        >
+          <!-- BOT MESSAGE -->
+          <div class="flex">
+            <div
+              class="max-w-[85%] bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3"
+            >
+              <p class="text-sm">👋 Hello! I'm AquaBot.</p>
+
+              <p class="text-sm text-slate-300 mt-2">Ask me things like:</p>
+
+              <ul class="text-sm text-slate-300 mt-2 space-y-1">
+                <li>• Is Railway Underpass safe for my bike?</li>
+                <li>• What route is safer during flooding?</li>
+                <li>• What is the water level at Main Junction?</li>
+                <li>• Is it safe for an ambulance?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- INPUT -->
+        <div class="border-t border-slate-800 p-4">
+          <div class="flex gap-3">
+            <input
+              id="botInput"
+              type="text"
+              placeholder="Ask AquaBot..."
+              class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white outline-none focus:border-cyan-500"
+            />
+
+            <button
+              id="sendBtn"
+              class="w-12 h-12 rounded-xl bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center font-bold"
+            >
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+
+          <p class="text-xs text-slate-500 mt-2">
+            AquaBot provides safety guidance. Always follow official emergency
+            instructions.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const chat = document.getElementById("chat");
+      const input = document.getElementById("botInput");
+      const sendBtn = document.getElementById("sendBtn");
+
+      /* -------------------------------------------------------
+   ADD MESSAGE
+------------------------------------------------------- */
+
+      function addMessage(text, type) {
+        const wrapper = document.createElement("div");
+
+        if (type === "user") {
+          wrapper.className = "flex justify-end";
+
+          wrapper.innerHTML = `
+            <div class="max-w-[85%]
+                        bg-blue-600
+                        rounded-2xl rounded-tr-none
+                        px-4 py-3">
+
+                <p class="text-sm">${escapeHtml(text)}</p>
+
+            </div>
+        `;
+        } else {
+          wrapper.className = "flex";
+
+          wrapper.innerHTML = `
+            <div class="max-w-[85%]
+                        bg-slate-800
+                        rounded-2xl rounded-tl-none
+                        px-4 py-3">
+
+                <p class="text-sm whitespace-pre-line">
+                    ${escapeHtml(text)}
+                </p>
+
+            </div>
+        `;
+        }
+
+        chat.appendChild(wrapper);
+
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      /* -------------------------------------------------------
+   BASIC HTML ESCAPE
+------------------------------------------------------- */
+
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+      }
+
+      /* -------------------------------------------------------
+   AQUABOT LOGIC
+------------------------------------------------------- */
+
+      function getBotResponse(question) {
+        const q = question.toLowerCase();
+
+        /* RAILWAY UNDERPASS */
+
+        if (q.includes("railway") || q.includes("underpass")) {
+          if (
+            q.includes("bike") ||
+            q.includes("scooter") ||
+            q.includes("two wheeler")
+          ) {
+            return (
+              "🚨 Railway Underpass is NOT safe for a bike right now.\n\n" +
+              "💧 Current water level: 22 cm.\n" +
+              "⚠️ This exceeds the safe clearance for a two-wheeler.\n\n" +
+              "Please use a dry alternate route."
+            );
+          }
+
+          return (
+            "⚠️ Railway Underpass currently has approximately " +
+            "22 cm of water.\n\n" +
+            "Please verify your vehicle's clearance before entering."
+          );
+        }
+
+        /* MAIN JUNCTION */
+
+        if (q.includes("main junction") || q.includes("junction")) {
+          return (
+            "🚨 Main Junction is currently dangerous.\n\n" +
+            "💧 Water level: 48 cm.\n" +
+            "⚠️ The road may be submerged.\n\n" +
+            "Use an alternate dry route."
+          );
+        }
+
+        /* SAFE ROUTE */
+
+        if (
+          q.includes("safe route") ||
+          q.includes("alternate route") ||
+          q.includes("bypass")
+        ) {
+          return (
+            "🟢 A monitored safe corridor is currently available.\n\n" +
+            "Flyover Bypass has approximately 0 cm water depth.\n\n" +
+            "Use the GIS Route Planner for vehicle-specific routing."
+          );
+        }
+
+        /* AMBULANCE */
+
+        if (q.includes("ambulance") || q.includes("emergency vehicle")) {
+          return (
+            "🚑 Emergency vehicles have a configured clearance " +
+            "limit of approximately 50 cm.\n\n" +
+            "However, always verify the actual flood depth " +
+            "before entering a flooded road."
+          );
+        }
+
+        /* WATER LEVEL */
+
+        if (q.includes("water level") || q.includes("water depth")) {
+          return (
+            "💧 Current monitored locations include:\n\n" +
+            "• Railway Underpass — 22 cm\n" +
+            "• Main Junction — 48 cm\n" +
+            "• Flyover Bypass — 0 cm\n\n" +
+            "Use the Live Flood Map for the latest visualization."
+          );
+        }
+
+        /* FLOOD / SAFETY */
+
+        if (
+          q.includes("safe") ||
+          q.includes("flood") ||
+          q.includes("waterlogging")
+        ) {
+          return (
+            "🌊 AquaShield recommends avoiding flooded roads " +
+            "where water depth exceeds your vehicle's safe clearance.\n\n" +
+            "You can use the GIS Route Planner to find a safer route."
+          );
+        }
+
+        /* DEFAULT */
+
+        return (
+          "🤖 I can help with flood and route safety.\n\n" +
+          "Try asking:\n" +
+          "• Is Railway Underpass safe for my bike?\n" +
+          "• What is the water level at Main Junction?\n" +
+          "• Is there a safe alternate route?\n" +
+          "• Is this route safe for an ambulance?"
+        );
+      }
+
+      /* -------------------------------------------------------
+   SEND MESSAGE
+------------------------------------------------------- */
+
+      function sendMessage() {
+        const value = input.value.trim();
+
+        if (!value) {
+          return;
+        }
+
+        addMessage(value, "user");
+
+        input.value = "";
+
+        setTimeout(() => {
+          const response = getBotResponse(value);
+
+          addMessage(response, "bot");
+        }, 400);
+      }
+
+      /* -------------------------------------------------------
+   EVENTS
+------------------------------------------------------- */
+
+      sendBtn.addEventListener("click", sendMessage);
+
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+
+          sendMessage();
+        }
+      });
+    </script>
+  </body>
+</html>
