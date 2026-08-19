@@ -412,7 +412,7 @@
       // --------------------------------------------------------
 
       const gisUrl =
-        "http://localhost:8501/?" +
+        "https://aquashield-gis.onrender.com/?" +
 
         "category=" +
         encodeURIComponent(
