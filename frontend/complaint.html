@@ -491,24 +491,40 @@
       function extractComplaintData(text) {
         const issue = detectIssue(text);
 
-        const location = detectLocation(text);
+        let location = detectLocation(text);
 
         const water = detectWaterDepth(text);
 
         let severity = detectSeverity(text);
 
-        if (hasEmergencyImpact(text)) {
-          severity = "High";
+        // IMPORTANT:
+        // "my road is flooded" is NOT a location.
+        // Force location to empty so the bot asks for the actual place.
+
+        if (
+          /^(the|my|this|our)?\s*(road|street|area|place|location)\s*(is|was|has|has been)\s*(flooded|flooding|waterlogged|blocked|damaged|unsafe)?$/i.test(
+            text.trim(),
+          )
+        ) {
+          location = "";
+        }
+
+        // Also reject generic phrases such as:
+        // "my road", "the road", "this area"
+
+        if (
+          /^(my|our|the|this)\s+(road|street|area|place|location)$/i.test(
+            location,
+          )
+        ) {
+          location = "";
         }
 
         return {
-          issue,
-
-          location,
-
-          water,
-
-          severity,
+          issue: issue,
+          location: location,
+          water: water,
+          severity: severity,
         };
       }
 
