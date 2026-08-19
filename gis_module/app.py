@@ -22,7 +22,7 @@ st.set_page_config(
 # API CONFIG
 # ============================================================
 
-AUTHORITY_API_URL = "http://127.0.0.1:5000/api/incidents"
+AUTHORITY_API_URL = "https://aquashield-authority-dashboard.onrender.com/api/incidents"
 
 
 # ============================================================
