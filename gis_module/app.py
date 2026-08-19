@@ -2024,46 +2024,21 @@ with analytics_tab:
         "source"
     ]
 ].copy()
- 
 
+table.columns = [
+    "Location",
+    "Risk",
+    "Water (cm)",
+    "Department",
+    "Status",
+    "Source"
+]
 
-    table.columns = [
-
-        "Current Location",
-
-        "Destination",
-
-        "Vehicle",
-
-        "Risk",
-
-        "Water (cm)",
-
-        "Department",
-
-        "Status",
-
-        "Distance (km)",
-
-        "Time (min)",
-
-        "Source"
-
-    ]
-
-
-    st.dataframe(
-
-        table,
-
-        use_container_width=True,
-
-        hide_index=True
-
-    )
-
-
-    st.divider()
+st.dataframe(
+    table,
+    use_container_width=True,
+    hide_index=True
+)
 
 
     # ========================================================
