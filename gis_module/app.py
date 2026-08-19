@@ -22,7 +22,7 @@ st.set_page_config(
 # API CONFIG
 # ============================================================
 
-AUTHORITY_API_URL = "https://aquashield-authority-dashboard.onrender.com/api/incidents"
+AUTHORITY_API_URL = "http://127.0.0.1:5000/api/incidents"
 
 
 # ============================================================
@@ -310,71 +310,49 @@ permanent_data = load_permanent_data()
 # ============================================================
 
 def build_live_data():
-    """
-    Build one consistent dataframe schema for both permanent
-    monitoring data and live Authority Dashboard incidents.
-
-    IMPORTANT:
-    Every row contains the same columns. This prevents the
-    KeyError that occurred when the Authority API returned no
-    incidents and the analytics table tried to access columns
-    such as destination, vehicle, distance_km and duration_min.
-    """
 
     incidents, error = get_authority_incidents()
 
     rows = []
 
-    # --------------------------------------------------------
-    # PERMANENT MONITORED ZONES
-    # --------------------------------------------------------
     for _, row in permanent_data.iterrows():
 
-        rows.append({
-            "id": row.get("id", ""),
-            "name": row.get("name", "Unknown Location"),
-            "destination": row.get("destination", ""),
-            "vehicle": row.get("vehicle", ""),
-            "distance_km": row.get("distance_km", 0),
-            "duration_min": row.get("duration_min", 0),
-            "lat": row.get("lat"),
-            "lon": row.get("lon"),
-            "risk": str(
-                row.get("risk", "LOW")
-            ).upper(),
-            "water_cm": row.get("water_cm", 0),
-            "department": row.get(
-                "department",
-                "Emergency Control"
-            ),
-            "status": row.get(
-                "status",
-                "Monitoring"
-            ),
-            "source": row.get(
-                "source",
-                "GIS Monitoring"
-            ),
-            "type": "Monitored Zone"
-        })
+    rows.append({
+        "id": row["id"],
+        "name": row["name"],
+        "destination": row.get("destination", ""),
+        "vehicle": row.get("vehicle", ""),
+        "distance_km": row.get("distance_km", 0),
+        "duration_min": row.get("duration_min", 0),
+        "lat": row["lat"],
+        "lon": row["lon"],
+        "risk": row["risk"],
+        "water_cm": row["water_cm"],
+        "department": row["department"],
+        "status": row["status"],
+        "source": row["source"],
+        "type": "Monitored Zone"
+    })
 
-    # --------------------------------------------------------
-    # LIVE AUTHORITY INCIDENTS
-    # --------------------------------------------------------
+
     for incident in incidents:
 
-        if not isinstance(incident, dict):
-            continue
-
         try:
+
             water = float(
                 incident.get(
                     "water",
-                    incident.get("water_cm", 0)
-                ) or 0
+                    incident.get(
+                        "water_cm",
+                        0
+                    )
+                )
             )
-        except (TypeError, ValueError):
+
+        except:
+
             water = 0
+
 
         risk = str(
             incident.get(
@@ -384,37 +362,27 @@ def build_live_data():
                     "LOW"
                 )
             )
-        ).upper().strip()
+        ).upper()
 
-        # Normalize common priority/risk values.
-        if risk in ("CRITICAL", "URGENT", "SEVERE"):
-            risk = "HIGH"
-        elif risk not in COLOR_MAP:
+
+        if risk not in COLOR_MAP:
             risk = "LOW"
 
+
         lat = incident.get("lat")
+
         if lat is None:
             lat = incident.get("latitude")
 
+
         lon = incident.get("lon")
+
         if lon is None:
             lon = incident.get("longitude")
 
-        try:
-            distance_km = float(
-                incident.get("distance_km", 0) or 0
-            )
-        except (TypeError, ValueError):
-            distance_km = 0
-
-        try:
-            duration_min = float(
-                incident.get("duration_min", 0) or 0
-            )
-        except (TypeError, ValueError):
-            duration_min = 0
 
         rows.append({
+
             "id": str(
                 incident.get(
                     "id",
@@ -424,96 +392,64 @@ def build_live_data():
                     )
                 )
             ),
-            "name": str(
+
+            "name": incident.get(
+                "location",
                 incident.get(
-                    "location",
-                    incident.get(
-                        "description",
-                        "Unknown Location"
-                    )
-                ) or "Unknown Location"
+                    "description",
+                    "Unknown Location"
+                )
             ),
-            "destination": str(
-                incident.get(
-                    "destination",
-                    ""
-                ) or ""
+
+            "destination": incident.get(
+                "destination",
+                ""
             ),
-            "vehicle": str(
-                incident.get(
-                    "vehicle",
-                    ""
-                ) or ""
+
+            "vehicle": incident.get(
+                "vehicle",
+                ""
             ),
-            "distance_km": distance_km,
-            "duration_min": duration_min,
+
+            "distance_km": incident.get(
+                "distance_km",
+                0
+            ),
+
+            "duration_min": incident.get(
+                "duration_min",
+                0
+            ),
+
             "lat": lat,
+
             "lon": lon,
+
             "risk": risk,
+
             "water_cm": water,
-            "department": str(
-                incident.get(
-                    "department",
-                    "Emergency Control"
-                ) or "Emergency Control"
+
+            "department": incident.get(
+                "department",
+                "Emergency Control"
             ),
-            "status": str(
-                incident.get(
-                    "status",
-                    "New Complaint"
-                ) or "New Complaint"
+
+            "status": incident.get(
+                "status",
+                "New Complaint"
             ),
-            "source": str(
-                incident.get(
-                    "source",
-                    "Authority Dashboard"
-                ) or "Authority Dashboard"
+
+            "source": incident.get(
+                "source",
+                "Authority Dashboard"
             ),
+
             "type": "Citizen / Authority Incident"
+
         })
 
-    # --------------------------------------------------------
-    # ALWAYS RETURN ALL REQUIRED COLUMNS
-    # --------------------------------------------------------
-    columns = [
-        "id",
-        "name",
-        "destination",
-        "vehicle",
-        "distance_km",
-        "duration_min",
-        "lat",
-        "lon",
-        "risk",
-        "water_cm",
-        "department",
-        "status",
-        "source",
-        "type"
-    ]
 
-    dataframe = pd.DataFrame(
-        rows,
-        columns=columns
-    )
-
-    # Safe numeric conversion for analytics/map code.
-    dataframe["water_cm"] = pd.to_numeric(
-        dataframe["water_cm"],
-        errors="coerce"
-    ).fillna(0)
-
-    dataframe["distance_km"] = pd.to_numeric(
-        dataframe["distance_km"],
-        errors="coerce"
-    ).fillna(0)
-
-    dataframe["duration_min"] = pd.to_numeric(
-        dataframe["duration_min"],
-        errors="coerce"
-    ).fillna(0)
-
-    return dataframe, error
+    return pd.DataFrame(rows), error
 
 
 live_data, api_error = build_live_data()
@@ -2014,31 +1950,59 @@ with analytics_tab:
     )
 
 
-   table = analytics_data[
-    [
-        "name",
-        "risk",
-        "water_cm",
-        "department",
-        "status",
-        "source"
+    table = analytics_data[
+        [
+            "name",
+            "destination",
+            "vehicle",
+            "risk",
+            "water_cm",
+            "department",
+            "status",
+            "distance_km",
+            "duration_min",
+            "source"
+        ]
+    ].copy()
+
+
+    table.columns = [
+
+        "Current Location",
+
+        "Destination",
+
+        "Vehicle",
+
+        "Risk",
+
+        "Water (cm)",
+
+        "Department",
+
+        "Status",
+
+        "Distance (km)",
+
+        "Time (min)",
+
+        "Source"
+
     ]
-].copy()
 
-table.columns = [
-    "Location",
-    "Risk",
-    "Water (cm)",
-    "Department",
-    "Status",
-    "Source"
-]
 
-st.dataframe(
-    table,
-    use_container_width=True,
-    hide_index=True
-)
+    st.dataframe(
+
+        table,
+
+        use_container_width=True,
+
+        hide_index=True
+
+    )
+
+
+    st.divider()
 
 
     # ========================================================
