@@ -2014,17 +2014,16 @@ with analytics_tab:
     )
 
 
-    table = analytics_data.reindex(
-    columns=[
+   table = analytics_data[
+    [
         "name",
         "risk",
         "water_cm",
         "department",
         "status",
         "source"
-    ],
-    fill_value=""
-).copy()
+    ]
+].copy()
 
 table.columns = [
     "Location",
@@ -2046,10 +2045,10 @@ st.dataframe(
     # CHARTS
     # ========================================================
 
-chart1, chart2 = st.columns(2)
+    chart1, chart2 = st.columns(2)
 
 
-with chart1:
+    with chart1:
 
         st.markdown(
             "### 🏢 Department-wise Incidents"
@@ -2099,7 +2098,7 @@ with chart1:
         )
 
 
-with chart2:
+    with chart2:
 
         st.markdown(
             "### 🌊 Risk Distribution"
@@ -2165,12 +2164,12 @@ with chart2:
     # WATER LEVEL CHART
     # ========================================================
 
-st.markdown(
+    st.markdown(
         "### 💧 Water Level by Location"
     )
 
 
-water_data = (
+    water_data = (
         analytics_data
         .sort_values(
             "water_cm",
@@ -2180,7 +2179,7 @@ water_data = (
     )
 
 
-fig_water = px.bar(
+    fig_water = px.bar(
 
         water_data,
 
@@ -2199,7 +2198,7 @@ fig_water = px.bar(
     )
 
 
-fig_water.update_layout(
+    fig_water.update_layout(
 
         xaxis_title="Location",
 
@@ -2631,5 +2630,4 @@ fig_water.update_layout(
         <b>Refresh Live Analytics</b>.
 
     </div>
-    """
-            )
+    """)
