@@ -29,6 +29,7 @@
 
         <div>
           <h1 class="font-bold text-lg">AquaShield AI</h1>
+
           <p class="text-xs text-slate-400">AI Complaint Assistant</p>
         </div>
       </div>
@@ -166,24 +167,15 @@
 
     <script>
       /* ==========================================================
-               API CONFIGURATION
-            ========================================================== */
+   API CONFIGURATION
+========================================================== */
 
       const AI_API = "https://aquashield-ai-api.onrender.com/predict";
-
       const AUTHORITY_API =
         "https://aquashield-authority-dashboard.onrender.com/api/incidents";
-
-      /*
-       * DEPLOYED GIS
-       * NOT localhost
-       */
-
-      const GIS_URL = "https://aquashield-gis.onrender.com/";
-
       /* ==========================================================
-               ELEMENTS
-            ========================================================== */
+   ELEMENTS
+========================================================== */
 
       const chat = document.getElementById("chat");
 
@@ -196,8 +188,8 @@
       const confirmBtn = document.getElementById("confirmBtn");
 
       /* ==========================================================
-               COMPLAINT STATE
-            ========================================================== */
+   COMPLAINT STATE
+========================================================== */
 
       let complaint = {
         description: "",
@@ -213,15 +205,9 @@
 
       let aiData = null;
 
-      /*
-       * Prevent duplicate AI requests.
-       */
-
-      let analysisInProgress = false;
-
       /* ==========================================================
-               CHAT MESSAGE
-            ========================================================== */
+   CHAT MESSAGE
+========================================================== */
 
       function addMessage(text, who = "bot") {
         const row = document.createElement("div");
@@ -246,8 +232,8 @@
       }
 
       /* ==========================================================
-               INITIAL MESSAGE
-            ========================================================== */
+   INITIAL MESSAGE
+========================================================== */
 
       function botStart() {
         addMessage(
@@ -262,23 +248,20 @@
       botStart();
 
       /* ==========================================================
-               NORMALIZE
-            ========================================================== */
+   NORMALIZE
+========================================================== */
 
       function normalize(text) {
         return String(text || "")
           .toLowerCase()
-
           .replace(/[!?]+/g, " ")
-
           .replace(/\s+/g, " ")
-
           .trim();
       }
 
       /* ==========================================================
-               ISSUE DETECTION
-            ========================================================== */
+   ISSUE DETECTION
+========================================================== */
 
       function detectIssue(text) {
         const t = normalize(text);
@@ -313,105 +296,75 @@
       }
 
       /* ==========================================================
-               LOCATION DETECTION
-               IMPORTANT:
-               "my road" IS NOT a location.
-            ========================================================== */
+   LOCATION DETECTION
+========================================================== */
 
       function detectLocation(text) {
         const original = String(text || "").trim();
 
-        if (!original) {
-          return "";
-        }
-
         /*
-         * IMPORTANT:
-         * Generic phrases such as "my road" are NOT locations.
+         * Explicit phrases:
+         * near Railway Station
+         * at MG Road
+         * on Ring Road
+         * around Vijay Nagar
          */
 
-        const genericOnly = /^(my|our|the|this)\s+(road|street|area|place)$/i;
-
-        /*
-         * ----------------------------------------------------------
-         * 1. Explicit location phrases
-         * ----------------------------------------------------------
-         */
-
-        const nearMatch = original.match(
-          /\b(?:near|at|around|beside|behind|opposite|outside|towards)\s+([^.!?;]+)/i,
+        const phraseMatch = original.match(
+          /\b(?:near|at|on|around|beside|behind|opposite|outside|towards)\s+([^,.!?;]+)/i,
         );
 
-        if (nearMatch) {
-          let location = nearMatch[1]
+        if (phraseMatch) {
+          let location = phraseMatch[1]
             .trim()
-            .replace(
-              /\s+(?:vehicles?|traffic|people|water)\s+(?:cannot|can't|can|is|are|was|were|has|have|had)\b.*$/i,
-              "",
-            )
-            .replace(/[,.]+$/, "")
+            .replace(/\b(and|where|because|while|but)\b.*$/i, "")
             .trim();
 
-          if (location.length >= 3 && !genericOnly.test(location)) {
+          if (
+            location.length >= 3 &&
+            !/^(the road|my road|this road|our road|there|here)$/i.test(
+              location,
+            )
+          ) {
             return location;
           }
         }
 
         /*
-         * ----------------------------------------------------------
-         * 2. Explicit location labels
-         * ----------------------------------------------------------
-         *
-         * Example:
-         * Location: Freeganj
-         * Road: AB Road
+         * Road / Street / Station etc.
+         */
+
+        const structuredMatch = original.match(
+          /\b[A-Za-z0-9][A-Za-z0-9' .-]{2,}(?:Road|Street|Square|Junction|Station|Hospital|Market|Nagar|Chowk|Crossing|Bypass|Highway|Circle|Bus Stand|Airport|Colony)\b(?:,\s*[A-Za-z .-]+)?/i,
+        );
+
+        if (structuredMatch) {
+          return structuredMatch[0].trim().replace(/[,.]+$/, "");
+        }
+
+        /*
+         * Explicit location label.
          */
 
         const labelledMatch = original.match(
-          /\b(?:location|area|place|road|street|landmark)\s*[:=-]\s*([^.!?;]+)/i,
+          /\b(?:location|area|place|road|street)\s*[:=-]\s*([^,.!?;]+)/i,
         );
 
         if (labelledMatch) {
-          let location = labelledMatch[1]
-            .trim()
-            .replace(/[,.]+$/, "")
-            .trim();
+          const location = labelledMatch[1].trim();
 
-          if (location.length >= 3 && !genericOnly.test(location)) {
+          if (
+            location.length >= 3 &&
+            !/^(flooded|flooding|waterlogged|blocked|damaged|unsafe|is|was|has|has been)$/i.test(
+              location,
+            )
+          ) {
             return location;
           }
         }
 
         /*
-         * ----------------------------------------------------------
-         * 3. Named landmarks
-         * ----------------------------------------------------------
-         *
-         * Railway Station
-         * Civil Hospital
-         * Bus Stand
-         * Freeganj Road
-         */
-
-        const namedPlace = original.match(
-          /\b[A-Za-z0-9][A-Za-z0-9' .-]{2,}\b(?:Road|Street|Square|Junction|Station|Hospital|Market|Nagar|Chowk|Crossing|Bypass|Highway|Circle|Bus Stand|Bus Station|Airport|Colony)\b(?:,\s*[A-Za-z .-]+)?/i,
-        );
-
-        if (namedPlace) {
-          const location = namedPlace[0]
-            .trim()
-            .replace(/[,.]+$/, "")
-            .trim();
-
-          if (location.length >= 3 && !genericOnly.test(location)) {
-            return location;
-          }
-        }
-
-        /*
-         * ----------------------------------------------------------
-         * 4. City names
-         * ----------------------------------------------------------
+         * Common cities.
          */
 
         const cityMatch = original.match(
@@ -422,40 +375,12 @@
           return cityMatch[0];
         }
 
-        /*
-         * ----------------------------------------------------------
-         * 5. NOTHING VALID FOUND
-         * ----------------------------------------------------------
-         *
-         * "my road is flooded" reaches here.
-         * Therefore location = "".
-         */
-
         return "";
       }
-      /*
-       * 4. Common city names
-       */
-
-      const cityMatch = original.match(
-        /\b(Indore|Ujjain|Bhopal|Mumbai|Pune|Delhi|Jaipur|Bengaluru|Bangalore|Hyderabad|Ahmedabad|Nagpur|Nashik|Surat|Kolkata|Chennai|Lucknow|Kanpur|Agra|Noida|Gurugram|Gurgaon|Chandigarh|Patna|Ranchi|Raipur|Vadodara|Mysuru|Mysore)\b/i,
-      );
-
-      if (cityMatch) {
-        return cityMatch[0];
-      }
-
-      /*
-       * IMPORTANT:
-       * Do NOT treat "my road", "the road",
-       * "this area", etc. as locations.
-       */
-
-      return "";
 
       /* ==========================================================
-               WATER DEPTH
-            ========================================================== */
+   WATER DEPTH
+========================================================== */
 
       function detectWaterDepth(text) {
         const match = String(text || "").match(
@@ -478,8 +403,8 @@
       }
 
       /* ==========================================================
-               SEVERITY DETECTION
-            ========================================================== */
+   SEVERITY DETECTION
+========================================================== */
 
       function detectSeverity(text) {
         const t = normalize(text);
@@ -497,7 +422,7 @@
         }
 
         /*
-         * Explicit HIGH
+         * Explicit HIGH.
          */
 
         if (/\bhigh\b/i.test(t)) {
@@ -529,7 +454,7 @@
         }
 
         /*
-         * Infer from water depth
+         * Infer from water depth.
          */
 
         const depth = detectWaterDepth(text);
@@ -550,8 +475,8 @@
       }
 
       /* ==========================================================
-               EMERGENCY DETECTION
-            ========================================================== */
+   EMERGENCY DETECTION
+========================================================== */
 
       function hasEmergencyImpact(text) {
         return /\b(ambulance|emergency vehicle|fire truck|rescue vehicle|cannot pass|can't pass|trapped|stranded|completely blocked)\b/i.test(
@@ -560,79 +485,36 @@
       }
 
       /* ==========================================================
-               EXTRACT DATA
-            ========================================================== */
+   EXTRACT DATA
+========================================================== */
+
       function extractComplaintData(text) {
-        const original = String(text || "").trim();
+        const issue = detectIssue(text);
 
-        const issue = detectIssue(original);
+        const location = detectLocation(text);
 
-        let location = detectLocation(original);
+        const water = detectWaterDepth(text);
 
-        const water = detectWaterDepth(original);
+        let severity = detectSeverity(text);
 
-        let severity = detectSeverity(original);
-
-        /*
-         * ==========================================================
-         * FINAL LOCATION SAFETY CHECK
-         * ==========================================================
-         *
-         * These phrases are NEVER valid locations:
-         *
-         * "my road is flooded"
-         * "our road is flooded"
-         * "the road is flooded"
-         * "this road is flooded"
-         * "my area is flooded"
-         *
-         * This check happens AFTER detectLocation(),
-         * so even if detectLocation() accidentally returns
-         * "my road", we force it back to empty.
-         */
-
-        const genericRoadComplaint =
-          /^(my|our|the|this)\s+(road|street|area|place|location)\b/i.test(
-            original,
-          );
-
-        if (genericRoadComplaint) {
-          location = "";
-        }
-
-        /*
-         * Also reject generic location values returned
-         * by the detector.
-         */
-
-        const invalidLocation =
-          /^(my|our|the|this)\s+(road|street|area|place|location)$/i;
-
-        if (location && invalidLocation.test(String(location).trim())) {
-          location = "";
-        }
-
-        /*
-         * Emergency impact automatically means HIGH.
-         */
-
-        if (hasEmergencyImpact(original)) {
+        if (hasEmergencyImpact(text)) {
           severity = "High";
         }
 
         return {
-          issue: issue,
+          issue,
 
-          location: location,
+          location,
 
-          water: water,
+          water,
 
-          severity: severity,
+          severity,
         };
       }
+
       /* ==========================================================
-               MERGE DATA
-            ========================================================== */
+   MERGE DATA
+========================================================== */
 
       function mergeComplaintData(data) {
         if (data.issue) {
@@ -653,70 +535,30 @@
       }
 
       /* ==========================================================
-               INFORMATION CHECK
-            ========================================================== */
+   INFORMATION CHECK
+========================================================== */
+
       function hasEnoughInformation(data) {
-        const location = String(data.location || "")
-          .trim()
-          .toLowerCase();
-
-        /*
-         * HARD BLOCK:
-         * These can NEVER be considered a real location.
-         */
-        const invalidLocation =
-          /^(my|our|the|this)\s+(road|street|area|place)\b/i.test(location);
-
-        if (invalidLocation) {
-          return false;
-        }
-
-        /*
-         * Also block if the detected location is actually
-         * part of a generic complaint such as:
-         * "my road is flooded"
-         */
-        if (
-          location.startsWith("my road") ||
-          location.startsWith("our road") ||
-          location.startsWith("the road") ||
-          location.startsWith("this road")
-        ) {
-          return false;
-        }
-
-        /*
-         * Problem is required.
-         */
         if (!data.issue) {
           return false;
         }
 
-        /*
-         * Real location is required.
-         */
-        if (!location || location.length < 3) {
+        if (!data.location || data.location.trim().length < 3) {
           return false;
         }
 
-        /*
-         * Severity OR water depth is required.
-         */
         if (!data.severity && data.water === null) {
           return false;
         }
 
         return true;
       }
+
       /* ==========================================================
-               ASK ONLY FOR MISSING DETAILS
-            ========================================================== */
+   ASK ONLY FOR MISSING DETAILS
+========================================================== */
 
       function askForMissingInformation(data) {
-        /*
-         * First ask what the problem is.
-         */
-
         if (!data.issue) {
           addMessage(
             "What is the problem? Please describe the water or flood hazard.",
@@ -724,13 +566,6 @@
 
           return;
         }
-
-        /*
-         * THEN location.
-         *
-         * This fixes:
-         * "my road is flooded"
-         */
 
         if (!data.location) {
           addMessage(
@@ -740,10 +575,6 @@
           return;
         }
 
-        /*
-         * THEN severity.
-         */
-
         if (!data.severity && data.water === null) {
           addMessage(
             "⚠️ How serious is the situation? You can say Low, Medium, or High, give the water depth, or mention if vehicles or emergency services cannot pass.",
@@ -752,29 +583,14 @@
           return;
         }
 
-        /*
-         * Everything is available.
-         */
-
         analyzeComplaint();
       }
 
       /* ==========================================================
-               AI ANALYSIS
-            ========================================================== */
+   AI ANALYSIS
+========================================================== */
 
       async function analyzeComplaint() {
-        /*
-         * VERY IMPORTANT:
-         * Prevent duplicate analysis.
-         */
-
-        if (analysisInProgress || aiData) {
-          return;
-        }
-
-        analysisInProgress = true;
-
         addMessage(
           "Thanks. I have enough information. I'm analysing your complete complaint with AquaShield AI...",
         );
@@ -815,7 +631,7 @@
           aiData = data;
 
           /*
-           * Respect explicit citizen severity.
+           * Respect what the citizen explicitly said.
            */
 
           const explicitLow =
@@ -879,19 +695,15 @@
         } catch (error) {
           console.error("AI ERROR:", error);
 
-          aiData = null;
-
           addMessage(
-            "I could not reach the AI service. Please try again in a moment.",
+            "I could not reach the AI service. Please make sure the AI API is running on port 8000.",
           );
-        } finally {
-          analysisInProgress = false;
         }
       }
 
       /* ==========================================================
-               INPUT HANDLER
-            ========================================================== */
+   INPUT HANDLER
+========================================================== */
 
       function handleInput() {
         const value = input.value.trim();
@@ -900,22 +712,9 @@
           return;
         }
 
-        /*
-         * Don't allow another request
-         * while analysis is running.
-         */
-
-        if (analysisInProgress) {
-          return;
-        }
-
         addMessage(value, "user");
 
         input.value = "";
-
-        /*
-         * If already analysed.
-         */
 
         if (aiData) {
           addMessage(
@@ -925,29 +724,16 @@
           return;
         }
 
-        /* ========================================================
-                 FIRST MESSAGE
-              ======================================================== */
+        /*
+         * FIRST MESSAGE
+         */
 
         if (!complaint.description) {
           complaint.description = value;
 
           const data = extractComplaintData(value);
-          // HARD LOCATION CHECK
-          if (
-            /^(my|our|the|this)\s+(road|street|area|place)\b/i.test(
-              value.trim(),
-            )
-          ) {
-            data.location = "";
-          }
 
           mergeComplaintData(data);
-
-          /*
-           * Complete complaint:
-           * analyse immediately.
-           */
 
           if (hasEnoughInformation(data)) {
             analyzeComplaint();
@@ -955,19 +741,14 @@
             return;
           }
 
-          /*
-           * Incomplete complaint:
-           * ask ONLY missing information.
-           */
-
           askForMissingInformation(data);
 
           return;
         }
 
-        /* ========================================================
-                 FOLLOW-UP ANSWER
-              ======================================================== */
+        /*
+         * FOLLOW-UP ANSWER
+         */
 
         complaint.description = (complaint.description + " " + value).trim();
 
@@ -985,14 +766,14 @@
       }
 
       /* ==========================================================
-               SEND BUTTON
-            ========================================================== */
+   SEND BUTTON
+========================================================== */
 
       sendBtn.addEventListener("click", handleInput);
 
       /* ==========================================================
-               ENTER KEY
-            ========================================================== */
+   ENTER KEY
+========================================================== */
 
       input.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -1003,8 +784,8 @@
       });
 
       /* ==========================================================
-               CONFIRM & SUBMIT
-            ========================================================== */
+   CONFIRM & SUBMIT
+========================================================== */
 
       confirmBtn.addEventListener("click", async function () {
         if (!aiData) {
@@ -1055,8 +836,8 @@
 
         try {
           /* ====================================================
-                     SEND TO AUTHORITY DASHBOARD
-                  ==================================================== */
+         SEND TO AUTHORITY DASHBOARD
+      ==================================================== */
 
           const response = await fetch(AUTHORITY_API, {
             method: "POST",
@@ -1104,8 +885,8 @@
           }
 
           /* ====================================================
-                     COMPLAINT ID
-                  ==================================================== */
+         COMPLAINT ID
+      ==================================================== */
 
           const authorityId =
             authorityData.incident && authorityData.incident.id
@@ -1115,8 +896,8 @@
           const complaintId = "AQ-" + String(authorityId);
 
           /* ====================================================
-                     CURRENT USER
-                  ==================================================== */
+         CURRENT USER
+      ==================================================== */
 
           let user = null;
 
@@ -1127,8 +908,8 @@
           }
 
           /*
-           * Demo citizen identity
-           * if user is not logged in.
+           * If no citizen account exists,
+           * create a demo citizen identity.
            */
 
           if (!user || !user.email) {
@@ -1144,8 +925,8 @@
           }
 
           /* ====================================================
-                     EXISTING COMPLAINTS
-                  ==================================================== */
+         EXISTING COMPLAINTS
+      ==================================================== */
 
           let complaints = [];
 
@@ -1160,8 +941,8 @@
           }
 
           /* ====================================================
-                     SAVE COMPLAINT
-                  ==================================================== */
+         SAVE COMPLAINT
+      ==================================================== */
 
           const savedComplaint = {
             id: complaintId,
@@ -1203,9 +984,11 @@
 
           console.log("AquaShield saved complaint:", savedComplaint);
 
+          console.log("All complaints:", complaints);
+
           /* ====================================================
-                     SUCCESS
-                  ==================================================== */
+         SUCCESS
+      ==================================================== */
 
           document.getElementById("refId").innerText = complaintId;
 
@@ -1213,9 +996,9 @@
 
           resultBox.classList.add("hidden");
 
-          /* ====================================================
-                     RESET CHAT
-                  ==================================================== */
+          /*
+           * Reset chatbot.
+           */
 
           chat.innerHTML = "";
 
@@ -1233,8 +1016,6 @@
 
           aiData = null;
 
-          analysisInProgress = false;
-
           botStart();
 
           window.scrollTo({
@@ -1244,13 +1025,13 @@
           });
 
           /* ====================================================
-                     OPEN DEPLOYED GIS
-                  ==================================================== */
+         OPEN GIS IN NEW TAB
+      ==================================================== */
 
           try {
             const gisUrl =
-              GIS_URL +
-              "?category=" +
+              "http://localhost:8501/?" +
+              "category=" +
               encodeURIComponent(savedComplaint.aiAnalysis.category) +
               "&title=" +
               encodeURIComponent(savedComplaint.aiAnalysis.category);
