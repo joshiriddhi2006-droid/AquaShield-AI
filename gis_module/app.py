@@ -317,7 +317,7 @@ def build_live_data():
 
     for _, row in permanent_data.iterrows():
 
-    rows.append({
+      rows.append({
         "id": row["id"],
         "name": row["name"],
         "destination": row.get("destination", ""),
