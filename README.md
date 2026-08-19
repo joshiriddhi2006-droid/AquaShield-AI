@@ -1,5 +1,3 @@
-@"
-
 # AquaShield AI
 
 ## AI-Powered Water & Flood Hazard Complaint Management System
