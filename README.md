@@ -400,10 +400,3 @@ By automating complaint analysis and routing while providing GIS-based navigatio
 ## 📄 License
 
 This project was developed for academic and demonstration purposes.
-
-:contentReference[oaicite:0]{index=0}
-
-And your repository:
-
-:contentReference[oaicite:1]{index=1}
-```
