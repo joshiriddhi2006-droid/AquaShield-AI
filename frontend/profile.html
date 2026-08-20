@@ -145,8 +145,8 @@
             <h1 class="text-3xl font-extrabold">My Complaints</h1>
 
             <p class="text-sm text-slate-300 mt-2 max-w-2xl">
-              Track your registered waterlogging and flood-related complaints
-              and monitor their current status.
+              View your registered waterlogging and flood-related complaint
+              history and monitor each complaint's current status.
             </p>
           </div>
 
@@ -188,132 +188,6 @@
               class="text-xs text-slate-500 dark:text-slate-400 mt-1"
             >
               AquaShield Citizen Account
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- =========================================================
-         COMPLAINT OVERVIEW
-    ========================================================== -->
-
-      <section class="mb-8">
-        <div
-          class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5"
-        >
-          <div>
-            <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">
-              Complaint Overview
-            </h2>
-
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Current AquaShield complaint statistics
-            </p>
-          </div>
-
-          <div
-            id="stats-status"
-            class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2"
-          >
-            <span
-              id="stats-dot"
-              class="w-2 h-2 rounded-full bg-slate-400"
-            ></span>
-
-            Loading statistics...
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <!-- TOTAL -->
-
-          <div
-            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center"
-            >
-              <i class="fa-solid fa-file-lines"></i>
-            </div>
-
-            <div
-              id="stat-total"
-              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
-            >
-              —
-            </div>
-
-            <div class="text-xs text-slate-500 dark:text-slate-400">
-              Total complaints
-            </div>
-          </div>
-
-          <!-- REGISTERED -->
-
-          <div
-            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center"
-            >
-              <i class="fa-solid fa-inbox"></i>
-            </div>
-
-            <div
-              id="stat-registered"
-              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
-            >
-              —
-            </div>
-
-            <div class="text-xs text-slate-500 dark:text-slate-400">
-              Registered
-            </div>
-          </div>
-
-          <!-- ACTIVE -->
-
-          <div
-            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center"
-            >
-              <i class="fa-solid fa-arrows-rotate"></i>
-            </div>
-
-            <div
-              id="stat-active"
-              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
-            >
-              —
-            </div>
-
-            <div class="text-xs text-slate-500 dark:text-slate-400">
-              Under response
-            </div>
-          </div>
-
-          <!-- SOLVED -->
-
-          <div
-            class="stat-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center"
-            >
-              <i class="fa-solid fa-circle-check"></i>
-            </div>
-
-            <div
-              id="stat-solved"
-              class="text-3xl font-extrabold mt-4 text-slate-900 dark:text-white"
-            >
-              —
-            </div>
-
-            <div class="text-xs text-slate-500 dark:text-slate-400">
-              Resolved
             </div>
           </div>
         </div>
@@ -416,63 +290,6 @@
     <script src="js/app.js"></script>
 
     <script src="js/complaint.js"></script>
-
-    <!-- =========================================================
-       PUBLIC STATISTICS
-  ========================================================== -->
-
-    <script>
-      async function loadProfileStatistics() {
-        const status = document.getElementById("stats-status");
-
-        try {
-          const response = await fetch(
-            "http://127.0.0.1:5000/api/public-stats",
-            {
-              method: "GET",
-              cache: "no-store",
-            },
-          );
-
-          if (!response.ok) {
-            throw new Error("Statistics API unavailable");
-          }
-
-          const data = await response.json();
-
-          document.getElementById("stat-total").textContent = data.total ?? 0;
-
-          document.getElementById("stat-registered").textContent =
-            data.registered ?? 0;
-
-          document.getElementById("stat-active").textContent = data.active ?? 0;
-
-          document.getElementById("stat-solved").textContent = data.solved ?? 0;
-
-          status.innerHTML =
-            '<span class="w-2 h-2 rounded-full bg-emerald-400"></span>' +
-            " Live statistics";
-        } catch (error) {
-          console.error("Profile statistics error:", error);
-
-          status.innerHTML =
-            '<span class="w-2 h-2 rounded-full bg-rose-400"></span>' +
-            " Statistics unavailable";
-
-          document.getElementById("stat-total").textContent = "—";
-
-          document.getElementById("stat-registered").textContent = "—";
-
-          document.getElementById("stat-active").textContent = "—";
-
-          document.getElementById("stat-solved").textContent = "—";
-        }
-      }
-
-      loadProfileStatistics();
-
-      setInterval(loadProfileStatistics, 30000);
-    </script>
 
     <!-- =========================================================
        THEME
