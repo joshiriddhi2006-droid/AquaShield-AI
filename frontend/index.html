@@ -82,7 +82,7 @@
             class="text-sky-600 dark:text-sky-400 hover:text-sky-500 transition-colors flex items-center gap-1.5"
           >
             <i class="fa-solid fa-house text-xs"></i>
-            Home
+            <span data-i18n="home">Home</span>
           </a>
 
           <a
@@ -90,7 +90,7 @@
             class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5"
           >
             <i class="fa-solid fa-circle-plus text-xs"></i>
-            Register Hazard
+            <span data-i18n="registerHazard">Register Hazard</span>
           </a>
 
           <a
@@ -98,11 +98,24 @@
             class="hover:text-sky-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5"
           >
             <i class="fa-solid fa-user text-xs"></i>
-            Profile
+            <span data-i18n="profile">Profile</span>
           </a>
 
-          <button
-            id="theme-toggle"
+          <div class="flex items-center gap-2">
+            <label for="language-select" class="sr-only">Language</label>
+            <select
+              id="language-select"
+              class="px-2.5 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold border border-slate-300 dark:border-slate-700 outline-none"
+              title="Select Language"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिन्दी</option>
+              <option value="mr">मराठी</option>
+              <option value="gu">ગુજરાતી</option>
+            </select>
+
+            <button
+              id="theme-toggle"
             class="p-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 transition-all border border-slate-300 dark:border-slate-700"
             title="Toggle Theme"
           >
@@ -138,21 +151,21 @@
               class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
             ></span>
 
-            Unified Emergency Response & Navigation Active
+            <span data-i18n="active">Unified Emergency Response & Navigation Active</span>
           </div>
 
           <h1
             class="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3"
           >
-            One Portal for All Flood & Urban Waterlogging Services
+            <span data-i18n="heroTitle">One Portal for All Flood & Urban Waterlogging Services</span>
           </h1>
 
           <p
             class="text-slate-300 text-sm md:text-base leading-relaxed font-normal"
           >
-            Choose your required service below: Navigate safe routes, register
+            <span data-i18n="heroText">Choose your required service below: Navigate safe routes, register
             community waterlogging complaints, or access emergency
-            first-responder tools.
+            first-responder tools.</span>
           </p>
         </div>
       </div>
@@ -164,7 +177,7 @@
           class="text-xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2"
         >
           <i class="fa-solid fa-cubes-stacked text-sky-500"></i>
-          Core Services & Portals
+          <span data-i18n="coreServices">Core Services & Portals</span>
         </h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -183,20 +196,20 @@
               <span
                 class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider"
               >
-                For Citizens
+                <span data-i18n="forCitizens">For Citizens</span>
               </span>
 
               <h3
                 class="text-lg font-bold text-slate-900 dark:text-white mt-1 mb-2"
               >
-                Safe Route Finder
+                <span data-i18n="safeRoute">Safe Route Finder</span>
               </h3>
 
               <p
                 class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6"
               >
-                Real-time flood-free road routes and waterlogging bypass
-                guidance.
+                <span data-i18n="safeRouteText">Real-time flood-free road routes and waterlogging bypass
+                guidance.</span>
               </p>
             </div>
 
@@ -204,7 +217,7 @@
               href="gis-map.html"
               class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs text-center transition-all flex items-center justify-center gap-2"
             >
-              Open GIS Route Map
+              <span data-i18n="openGIS">Open GIS Route Map</span>
               <i class="fa-solid fa-arrow-right text-xs"></i>
             </a>
           </div>
@@ -224,20 +237,20 @@
               <span
                 class="text-xs font-extrabold text-sky-600 dark:text-sky-400 uppercase tracking-wider"
               >
-                Citizen Reporting
+                <span data-i18n="citizenReporting">Citizen Reporting</span>
               </span>
 
               <h3
                 class="text-lg font-bold text-slate-900 dark:text-white mt-1 mb-2"
               >
-                Report Waterlogging
+                <span data-i18n="reportWaterlogging">Report Waterlogging</span>
               </h3>
 
               <p
                 class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6"
               >
-                File waterlogging, blocked drains, or open manhole hazards with
-                live GPS.
+                <span data-i18n="reportText">File waterlogging, blocked drains, or open manhole hazards with
+                live GPS.</span>
               </p>
             </div>
 
@@ -246,7 +259,7 @@
               class="w-full py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs text-center transition-all flex items-center justify-center gap-2"
             >
               <i class="fa-solid fa-pen-to-square"></i>
-              File Complaint
+              <span data-i18n="fileComplaint">File Complaint</span>
             </a>
           </div>
 
@@ -265,19 +278,19 @@
               <span
                 class="text-xs font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-wider"
               >
-                Emergency Services
+                <span data-i18n="emergencyServices">Emergency Services</span>
               </span>
 
               <h3
                 class="text-lg font-bold text-slate-900 dark:text-white mt-1 mb-2"
               >
-                Ambulance & Disaster
+                <span data-i18n="ambulanceDisaster">Ambulance & Disaster</span>
               </h3>
 
               <p
                 class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6"
               >
-                Priority emergency route access & direct hotline connectivity.
+                <span data-i18n="emergencyText">Priority emergency route access & direct hotline connectivity.</span>
               </p>
             </div>
 
@@ -289,7 +302,7 @@
               class="w-full py-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-extrabold text-xs text-center transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <i class="fa-solid fa-phone-volume"></i>
-              Emergency Call (108)
+              <span data-i18n="emergencyCall">Emergency Call (108)</span>
             </button>
           </div>
 
@@ -309,7 +322,7 @@
                 <span
                   class="text-xs font-extrabold text-amber-600 dark:text-amber-400 uppercase tracking-wider"
                 >
-                  Municipal / PWD
+                  <span data-i18n="municipal">Municipal / PWD</span>
                 </span>
 
                 <span
@@ -322,14 +335,14 @@
               <h3
                 class="text-lg font-bold text-slate-900 dark:text-white mt-1 mb-2"
               >
-                Authority Portal
+                <span data-i18n="authorityPortal">Authority Portal</span>
               </h3>
 
               <p
                 class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6"
               >
-                Official personnel login for dispatch, GIS heatmaps & team
-                assignments.
+                <span data-i18n="authorityText">Official personnel login for dispatch, GIS heatmaps & team
+                assignments.</span>
               </p>
             </div>
 
@@ -338,7 +351,7 @@
               class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 text-amber-400 font-extrabold text-xs text-center border border-amber-500/30 transition-all flex items-center justify-center gap-2"
             >
               <i class="fa-solid fa-lock text-xs"></i>
-              Official Officer Login
+              <span data-i18n="officerLogin">Official Officer Login</span>
             </a>
           </div>
         </div>
@@ -355,11 +368,11 @@
               class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2"
             >
               <i class="fa-solid fa-chart-column text-sky-500"></i>
-              City Complaint Status
+              <span data-i18n="cityStatus">City Complaint Status</span>
             </h2>
 
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Live aggregate statistics from the AquaShield Authority system.
+              <span data-i18n="liveStatsText">Live aggregate statistics from the AquaShield Authority system.</span>
             </p>
           </div>
 
@@ -512,11 +525,11 @@
           >
             <div>
               <h3 class="font-bold text-sm text-slate-900 dark:text-white">
-                Current Risk Overview
+                <span data-i18n="riskOverview">Current Risk Overview</span>
               </h3>
 
               <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-                Aggregate risk levels across reported incidents.
+                <span data-i18n="riskText">Aggregate risk levels across reported incidents.</span>
               </p>
             </div>
 
@@ -1101,5 +1114,114 @@
         }
       });
     </script>
+
+    <!-- =========================================================
+         SAFE MULTILINGUAL UI
+         Does not change complaint/GPS/AI logic.
+    ========================================================== -->
+    <script>
+      const AQUASHIELD_TRANSLATIONS = {
+        en: {
+          home:"Home", registerHazard:"Register Hazard", profile:"Profile",
+          active:"Unified Emergency Response & Navigation Active",
+          heroTitle:"One Portal for All Flood & Urban Waterlogging Services",
+          heroText:"Choose your required service below: Navigate safe routes, register community waterlogging complaints, or access emergency first-responder tools.",
+          coreServices:"Core Services & Portals", forCitizens:"For Citizens",
+          safeRoute:"Safe Route Finder", safeRouteText:"Real-time flood-free road routes and waterlogging bypass guidance.",
+          openGIS:"Open GIS Route Map", citizenReporting:"Citizen Reporting",
+          reportWaterlogging:"Report Waterlogging", reportText:"File waterlogging, blocked drains, or open manhole hazards with live GPS.",
+          fileComplaint:"File Complaint", emergencyServices:"Emergency Services",
+          ambulanceDisaster:"Ambulance & Disaster", emergencyText:"Priority emergency route access & direct hotline connectivity.",
+          emergencyCall:"Emergency Call (108)", municipal:"Municipal / PWD",
+          authorityPortal:"Authority Portal", authorityText:"Official personnel login for dispatch, GIS heatmaps & team assignments.",
+          officerLogin:"Official Officer Login", cityStatus:"City Complaint Status",
+          liveStatsText:"Live aggregate statistics from the AquaShield Authority system.",
+          totalComplaints:"Total complaints", newlyRegistered:"Newly registered / reported",
+          underResponse:"Complaints under response", successResolved:"Successfully resolved",
+          riskOverview:"Current Risk Overview", riskText:"Aggregate risk levels across reported incidents.",
+          language:"Language"
+        },
+        hi: {
+          home:"होम", registerHazard:"शिकायत दर्ज करें", profile:"प्रोफ़ाइल",
+          active:"एकीकृत आपातकालीन प्रतिक्रिया और नेविगेशन सक्रिय",
+          heroTitle:"बाढ़ और शहरी जलभराव सेवाओं के लिए एक पोर्टल",
+          heroText:"नीचे आवश्यक सेवा चुनें: सुरक्षित मार्ग खोजें, जलभराव की शिकायत दर्ज करें या आपातकालीन सहायता प्राप्त करें।",
+          coreServices:"मुख्य सेवाएँ और पोर्टल", forCitizens:"नागरिकों के लिए",
+          safeRoute:"सुरक्षित मार्ग खोजक", safeRouteText:"बाढ़-मुक्त मार्ग और जलभराव से बचने के लिए मार्गदर्शन।",
+          openGIS:"GIS मार्ग मानचित्र खोलें", citizenReporting:"नागरिक शिकायत",
+          reportWaterlogging:"जलभराव की शिकायत", reportText:"लाइव GPS के साथ जलभराव, बंद नालियों या खुले मैनहोल की शिकायत दर्ज करें।",
+          fileComplaint:"शिकायत दर्ज करें", emergencyServices:"आपातकालीन सेवाएँ",
+          ambulanceDisaster:"एम्बुलेंस और आपदा सहायता", emergencyText:"प्राथमिकता वाले आपातकालीन मार्ग और सीधे हेल्पलाइन से संपर्क।",
+          emergencyCall:"आपातकालीन कॉल (108)", municipal:"नगरपालिका / PWD",
+          authorityPortal:"अधिकारी पोर्टल", authorityText:"डिस्पैच, GIS हीटमैप और टीम असाइनमेंट के लिए आधिकारिक लॉगिन।",
+          officerLogin:"अधिकारी लॉगिन", cityStatus:"शहर शिकायत स्थिति",
+          liveStatsText:"AquaShield प्राधिकरण प्रणाली से लाइव शिकायत आँकड़े।",
+          totalComplaints:"कुल शिकायतें", newlyRegistered:"नई दर्ज / रिपोर्ट की गई",
+          underResponse:"प्रतिक्रिया के अंतर्गत शिकायतें", successResolved:"सफलतापूर्वक हल",
+          riskOverview:"वर्तमान जोखिम स्थिति", riskText:"रिपोर्ट की गई घटनाओं के जोखिम स्तर।", language:"भाषा"
+        },
+        mr: {
+          home:"मुख्यपृष्ठ", registerHazard:"तक्रार नोंदवा", profile:"प्रोफाइल",
+          active:"एकात्मिक आपत्कालीन प्रतिसाद आणि नेव्हिगेशन सक्रिय",
+          heroTitle:"पूर आणि शहरी पाणी साचण्याच्या सेवांसाठी एक पोर्टल",
+          heroText:"आवश्यक सेवा निवडा: सुरक्षित मार्ग शोधा, पाणी साचल्याची तक्रार नोंदवा किंवा आपत्कालीन मदत मिळवा.",
+          coreServices:"मुख्य सेवा आणि पोर्टल", forCitizens:"नागरिकांसाठी",
+          safeRoute:"सुरक्षित मार्ग शोधक", safeRouteText:"पूरमुक्त रस्ते आणि पाणी साचलेल्या भागांना टाळण्यासाठी मार्गदर्शन.",
+          openGIS:"GIS मार्ग नकाशा उघडा", citizenReporting:"नागरिक तक्रार",
+          reportWaterlogging:"पाणी साचल्याची तक्रार", reportText:"लाइव्ह GPS सह पाणी साचणे, बंद नाले किंवा उघड्या मॅनहोलची तक्रार नोंदवा.",
+          fileComplaint:"तक्रार नोंदवा", emergencyServices:"आपत्कालीन सेवा",
+          ambulanceDisaster:"रुग्णवाहिका आणि आपत्ती मदत", emergencyText:"प्राधान्य आपत्कालीन मार्ग आणि थेट हेल्पलाइन संपर्क.",
+          emergencyCall:"आपत्कालीन कॉल (108)", municipal:"महानगरपालिका / PWD",
+          authorityPortal:"अधिकारी पोर्टल", authorityText:"डिस्पॅच, GIS हीटमॅप आणि टीम असाइनमेंटसाठी अधिकृत लॉगिन.",
+          officerLogin:"अधिकारी लॉगिन", cityStatus:"शहर तक्रार स्थिती",
+          liveStatsText:"AquaShield प्राधिकरण प्रणालीतील लाइव्ह तक्रार आकडेवारी.",
+          totalComplaints:"एकूण तक्रारी", newlyRegistered:"नवीन नोंदवलेल्या / अहवालित",
+          underResponse:"प्रतिसादाच्या प्रक्रियेत", successResolved:"यशस्वीरित्या सोडवलेल्या",
+          riskOverview:"सध्याचा जोखीम आढावा", riskText:"नोंदवलेल्या घटनांचे जोखीम स्तर.", language:"भाषा"
+        },
+        gu: {
+          home:"હોમ", registerHazard:"ફરિયાદ નોંધાવો", profile:"પ્રોફાઇલ",
+          active:"એકત્રિત ઇમરજન્સી પ્રતિસાદ અને નેવિગેશન સક્રિય",
+          heroTitle:"પૂર અને શહેરી પાણી ભરાવાની સેવાઓ માટે એક પોર્ટલ",
+          heroText:"જરૂરી સેવા પસંદ કરો: સુરક્ષિત માર્ગ શોધો, પાણી ભરાવાની ફરિયાદ નોંધાવો અથવા ઇમરજન્સી સહાય મેળવો.",
+          coreServices:"મુખ્ય સેવાઓ અને પોર્ટલ", forCitizens:"નાગરિકો માટે",
+          safeRoute:"સલામત માર્ગ શોધક", safeRouteText:"પૂરમુક્ત માર્ગો અને પાણી ભરાયેલા વિસ્તારોને ટાળવા માટે માર્ગદર્શન.",
+          openGIS:"GIS માર્ગ નકશો ખોલો", citizenReporting:"નાગરિક ફરિયાદ",
+          reportWaterlogging:"પાણી ભરાવાની ફરિયાદ", reportText:"લાઇવ GPS સાથે પાણી ભરાવા, બંધ ગટર અથવા ખુલ્લા મેનહોલની ફરિયાદ નોંધાવો.",
+          fileComplaint:"ફરિયાદ નોંધાવો", emergencyServices:"ઇમરજન્સી સેવાઓ",
+          ambulanceDisaster:"એમ્બ્યુલન્સ અને આપત્તિ સહાય", emergencyText:"પ્રાથમિક ઇમરજન્સી માર્ગ અને સીધી હેલ્પલાઇન કનેક્ટિવિટી.",
+          emergencyCall:"ઇમરજન્સી કૉલ (108)", municipal:"મ્યુનિસિપલ / PWD",
+          authorityPortal:"અથોરિટી પોર્ટલ", authorityText:"ડિસ્પેચ, GIS હીટમેપ અને ટીમ અસાઇનમેન્ટ માટે અધિકૃત લૉગિન.",
+          officerLogin:"અધિકારી લૉગિન", cityStatus:"શહેર ફરિયાદ સ્થિતિ",
+          liveStatsText:"AquaShield અથોરિટી સિસ્ટમમાંથી લાઇવ ફરિયાદ આંકડા.",
+          totalComplaints:"કુલ ફરિયાદો", newlyRegistered:"નવી નોંધાયેલી / રિપોર્ટ કરેલી",
+          underResponse:"પ્રતિસાદ હેઠળની ફરિયાદો", successResolved:"સફળતાપૂર્વક ઉકેલાયેલી",
+          riskOverview:"વર્તમાન જોખમ સ્થિતિ", riskText:"રિપોર્ટ થયેલી ઘટનાઓના જોખમ સ્તરો.", language:"ભાષા"
+        }
+      };
+
+      function applyAquaShieldLanguage(lang) {
+        const t = AQUASHIELD_TRANSLATIONS[lang] || AQUASHIELD_TRANSLATIONS.en;
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
+          if (t[key]) el.textContent = t[key];
+        });
+        const select = document.getElementById("language-select");
+        if (select) select.value = lang;
+        localStorage.setItem("aquashieldLanguage", lang);
+      }
+
+      const languageSelect = document.getElementById("language-select");
+      if (languageSelect) {
+        languageSelect.addEventListener("change", () => {
+          applyAquaShieldLanguage(languageSelect.value);
+        });
+        applyAquaShieldLanguage(
+          localStorage.getItem("aquashieldLanguage") || "en"
+        );
+      }
+    </script>
+
   </body>
 </html>
