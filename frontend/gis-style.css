@@ -1,0 +1,690 @@
+/* ==========================================================================
+   AquaShield AI - Integrated Global & Responsive Stylesheet
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ROOT VARIABLES & THEMES
+   -------------------------------------------------------------------------- */
+:root {
+    --bg-main: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    
+    --primary-blue: #0284c7;
+    --accent-green: #16a34a;
+    --accent-red: #dc2626;
+    --accent-orange: #ea580c;
+    --dark-bg: #0f172a;
+    
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+    --shadow-md: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.dark-theme {
+    --bg-main: #0b0f19;
+    --card-bg: #1e293b;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+}
+
+/* --------------------------------------------------------------------------
+   2. BASE RESET & TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background-color 0.3s, color 0.3s;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* --------------------------------------------------------------------------
+   3. NAVBAR
+   -------------------------------------------------------------------------- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 1.8rem;
+    color: var(--primary-blue);
+}
+
+.nav-brand h1 {
+    font-size: 1.25rem;
+    line-height: 1.1;
+}
+
+.nav-brand span {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    transition: 0.2s;
+}
+
+.nav-item.active, .nav-item:hover {
+    color: var(--primary-blue);
+    background: rgba(2, 132, 199, 0.1);
+}
+
+.theme-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. HERO SECTION
+   -------------------------------------------------------------------------- */
+.hero-section {
+    padding: 2rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-card {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #fff;
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #22c55e;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #22c55e;
+}
+
+.hero-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.hero-card p {
+    opacity: 0.9;
+    max-width: 700px;
+    font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. MAIN CONTAINER, CARDS & GRIDS
+   -------------------------------------------------------------------------- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem 3rem 1.5rem;
+}
+
+.section-title {
+    margin: 2rem 0 1rem 0;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.5rem;
+}
+
+.card h4 {
+    margin: 0.2rem 0 0.5rem 0;
+    font-size: 1.15rem;
+}
+
+.card p {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    flex: 1;
+}
+
+.card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.icon-green { background: #dcfce7; color: #16a34a; }
+.icon-blue { background: #e0f2fe; color: #0284c7; }
+.icon-red { background: #fee2e2; color: #dc2626; }
+.icon-orange { background: #ffedd5; color: #ea580c; }
+
+/* --------------------------------------------------------------------------
+   6. STATS & ANALYTICAL CARDS (RESPONSIVE 4-STAT GRID)
+   -------------------------------------------------------------------------- */
+.stats-container, .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-box, .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.stat-box h3, .stat-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.stat-box p, .stat-card p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Area Grid Item Styles */
+#areaGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.area-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge-solved {
+    background: #d1fae5;
+    color: #059669;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: bold;
+}
+
+.badge-pending {
+    background: #ffe4e6;
+    color: #e11d48;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.72rem;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   7. BUTTONS
+   -------------------------------------------------------------------------- */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.2s;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-green { background: var(--accent-green); color: #fff; }
+.btn-blue { background: var(--primary-blue); color: #fff; }
+.btn-red { background: var(--accent-red); color: #fff; }
+.btn-dark { background: var(--dark-bg); color: #fff; }
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   8. SPECIALIZATIONS GRID
+   -------------------------------------------------------------------------- */
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.spec-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.spec-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.spec-icon {
+    font-size: 1.4rem;
+    color: var(--primary-blue);
+}
+
+.spec-info h5 {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+
+.spec-info p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   9. FORMS & LOGIN CARDS
+   -------------------------------------------------------------------------- */
+.login-card, 
+.complaint-card, 
+.form-card, 
+.form-container, 
+.complaint-container {
+    background: var(--card-bg);
+    max-width: 520px;
+    width: 100%;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.login-card h2, 
+.complaint-card h2, 
+.form-container h2, 
+.complaint-container h2 {
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea,
+.complaint-form input, 
+.complaint-form select, 
+.complaint-form textarea,
+.modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 16px; /* Prevents auto-zoom on mobile safari/iOS */
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus,
+.modal-input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.btn-primary, 
+.btn-submit,
+.complaint-form button[type="submit"] {
+    width: 100%;
+    background-color: var(--primary-blue);
+    color: #ffffff;
+    padding: 13px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover, 
+.btn-submit:hover,
+.complaint-form button[type="submit"]:hover {
+    background-color: #0369a1;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   10. TABLES (RESPONSIVE TABLE WRAPPER FOR MOBILE)
+   -------------------------------------------------------------------------- */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    min-width: 600px; /* Ensures table doesn't shrink awkwardly on small screens */
+}
+
+th, td {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background: var(--bg-main);
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   11. MODAL OVERLAY STYLES
+   -------------------------------------------------------------------------- */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 480px;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+.spec-result-box {
+    margin-top: 1rem;
+    padding: 12px;
+    background: var(--bg-main);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   12. FOOTER
+   -------------------------------------------------------------------------- */
+.footer {
+    background: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+    padding: 3rem 1.5rem 1rem 1.5rem;
+}
+
+.footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-col h5 {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 8px; font-size: 0.85rem; }
+.footer-col a { color: var(--primary-blue); text-decoration: none; }
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   13. COMPREHENSIVE RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+/* Tablet Screens (Max Width: 992px) */
+@media (max-width: 992px) {
+    .stats-container, .stats-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 Grid on tablets */
+    }
+}
+
+/* Mobile Screens (Max Width: 768px) */
+@media (max-width: 768px) {
+    /* Navbar Scaling */
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+
+    .nav-brand h1 {
+        font-size: 1.1rem;
+    }
+
+    .nav-brand span {
+        display: none; /* Hide subtitle on small screens */
+    }
+
+    .nav-links {
+        gap: 0.4rem;
+    }
+
+    .nav-item {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+
+    /* Hero Section Scaling */
+    .hero-section {
+        padding: 1rem;
+    }
+
+    .hero-card {
+        padding: 1.5rem 1.2rem;
+        border-radius: var(--radius-md);
+    }
+
+    .hero-card h2 {
+        font-size: 1.35rem;
+    }
+
+    .hero-card p {
+        font-size: 0.85rem;
+    }
+
+    .status-badge {
+        font-size: 0.72rem;
+    }
+
+    /* Layout Grids */
+    .container {
+        padding: 0.5rem 1rem 2rem 1rem;
+    }
+
+    .services-grid, 
+    .specs-grid, 
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Forms Responsiveness */
+    .login-card, 
+    .complaint-card, 
+    .form-card, 
+    .form-container, 
+    .complaint-container {
+        margin: 20px auto;
+        padding: 20px 16px;
+        width: 100%;
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Touch-friendly Buttons */
+    .btn, 
+    .btn-primary, 
+    .btn-submit {
+        padding: 14px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Small Mobile Screens (Max Width: 520px) */
+@media (max-width: 520px) {
+    .stats-container, .stats-grid {
+        grid-template-columns: 1fr 1fr; /* Clean 2x2 layout on mobile */
+        gap: 8px;
+    }
+
+    .stat-box, .stat-card {
+        padding: 0.8rem;
+    }
+
+    .stat-box h3, .stat-card h3 {
+        font-size: 1.4rem;
+    }
+
+    .stat-box p, .stat-card p {
+        font-size: 0.72rem;
+    }
+}
