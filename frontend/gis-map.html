@@ -3,18 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Real-Time GIS Safe Route - AquaShield</title>
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+
     <link rel="stylesheet" href="gis-style.css" />
 
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
@@ -92,12 +95,16 @@
   </head>
 
   <body class="light-theme">
+    <!-- NAVBAR -->
+
     <nav class="navbar">
       <div class="nav-brand">
         <i class="fa-solid fa-route logo-icon" style="color: #0284c7"></i>
+
         <div>
           <h1>AquaShield GIS</h1>
-          <span>Flood Safe Route & Navigation</span>
+
+          <span> Flood Safe Route & Navigation </span>
         </div>
       </div>
 
@@ -106,7 +113,9 @@
           href="https://aquashield-citizen.onrender.com/index.html"
           class="nav-item"
         >
-          <i class="fa-solid fa-house"></i> Home
+          <i class="fa-solid fa-house"></i>
+
+          Home
         </a>
 
         <a
@@ -129,13 +138,20 @@
       </div>
     </nav>
 
+    <!-- MAIN -->
+
     <main class="container" style="max-width: 100%; padding: 0 1rem">
       <div class="gis-container">
+        <!-- SIDEBAR -->
+
         <aside class="gis-sidebar">
           <h3 style="margin: 0; font-size: 1.1rem; color: var(--text-primary)">
             <i class="fa-solid fa-sliders"></i>
+
             Safe Route Navigation
           </h3>
+
+          <!-- GPS -->
 
           <button
             class="btn btn-blue"
@@ -143,8 +159,11 @@
             onclick="locateUserOnMap()"
           >
             <i class="fa-solid fa-crosshairs"></i>
+
             Get My GPS Location
           </button>
+
+          <!-- DESTINATION -->
 
           <div>
             <label
@@ -157,6 +176,7 @@
               "
             >
               <i class="fa-solid fa-magnifying-glass-location"></i>
+
               Enter Destination Area:
             </label>
 
@@ -179,6 +199,8 @@
             </div>
           </div>
 
+          <!-- VEHICLE -->
+
           <div>
             <label
               style="
@@ -190,6 +212,7 @@
               "
             >
               <i class="fa-solid fa-car"></i>
+
               Select Vehicle Type:
             </label>
 
@@ -209,9 +232,12 @@
             </select>
           </div>
 
+          <!-- TRIP SUMMARY -->
+
           <div class="route-info-box">
             <h4 style="margin: 0 0 6px 0; color: var(--text-primary)">
               <i class="fa-solid fa-map-pin"></i>
+
               Trip Summary
             </h4>
 
@@ -250,9 +276,12 @@
               onclick="openGoogleMapsLive()"
             >
               <i class="fa-solid fa-location-arrow"></i>
+
               Open in Google Maps
             </button>
           </div>
+
+          <!-- MAP STYLE -->
 
           <div style="margin-top: auto">
             <h4
@@ -273,6 +302,7 @@
                 checked
                 onchange="switchMapStyle('street')"
               />
+
               Standard Map
             </label>
 
@@ -285,10 +315,13 @@
                 value="satellite"
                 onchange="switchMapStyle('satellite')"
               />
+
               Satellite
             </label>
           </div>
         </aside>
+
+        <!-- MAP -->
 
         <section style="position: relative">
           <div id="realGisMap"></div>
@@ -296,22 +329,36 @@
       </div>
     </main>
 
+    <!-- LEAFLET -->
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <!-- YOUR EXISTING GIS APP -->
 
     <script src="app.js"></script>
 
     <script>
       let map;
+
       let streetTile;
+
       let satelliteTile;
+
       let startMarker;
+
       let destMarker;
+
       let routingControl;
 
       let startCoords = [22.7196, 75.8577];
+
       let destCoords = null;
+
+      /* =====================================================
+         INITIALIZE MAP
+      ===================================================== */
 
       document.addEventListener("DOMContentLoaded", function () {
         map = L.map("realGisMap").setView(startCoords, 13);
@@ -351,11 +398,16 @@
         }
       });
 
+      /* =====================================================
+         SEARCH DESTINATION
+      ===================================================== */
+
       async function searchDestination() {
         const query = document.getElementById("destInput").value.trim();
 
         if (!query) {
           alert("Please enter a location or area name!");
+
           return;
         }
 
@@ -373,6 +425,7 @@
 
           if (!data || data.length === 0) {
             adviceBox.innerHTML = "❌ Location not found. Try another area.";
+
             return;
           }
 
@@ -398,8 +451,14 @@
         }
       }
 
+      /* =====================================================
+         ROUTE
+      ===================================================== */
+
       function calculateRoute() {
-        if (!destCoords) return;
+        if (!destCoords) {
+          return;
+        }
 
         if (routingControl) {
           map.removeControl(routingControl);
@@ -408,6 +467,7 @@
         routingControl = L.Routing.control({
           waypoints: [
             L.latLng(startCoords[0], startCoords[1]),
+
             L.latLng(destCoords[0], destCoords[1]),
           ],
 
@@ -431,6 +491,7 @@
             return null;
           },
         })
+
           .on("routesfound", function (e) {
             const route = e.routes[0];
 
@@ -442,12 +503,18 @@
             document.getElementById("safetyAdvice").innerHTML =
               "✅ Route calculated. Stay alert for waterlogged areas and follow safety instructions.";
           })
+
           .addTo(map);
       }
+
+      /* =====================================================
+         GPS
+      ===================================================== */
 
       function locateUserOnMap() {
         if (!navigator.geolocation) {
           alert("GPS is not supported by your browser.");
+
           return;
         }
 
@@ -477,10 +544,15 @@
 
           {
             enableHighAccuracy: true,
+
             timeout: 10000,
           },
         );
       }
+
+      /* =====================================================
+         VEHICLE TYPE
+      ===================================================== */
 
       function onVehicleChange() {
         const vehicle = document.getElementById("vehicleType").value;
@@ -499,6 +571,10 @@
           advice.innerText = "🚗 Car selected. Avoid known flood-risk zones.";
         }
       }
+
+      /* =====================================================
+         MAP STYLE
+      ===================================================== */
 
       function switchMapStyle(style) {
         if (style === "satellite") {
@@ -520,9 +596,14 @@
         }
       }
 
+      /* =====================================================
+         GOOGLE MAPS
+      ===================================================== */
+
       function openGoogleMapsLive() {
         if (!destCoords) {
           alert("Please select a destination first.");
+
           return;
         }
 
@@ -531,19 +612,22 @@
         window.open(url, "_blank");
       }
 
-      /* ==========================================================
-         GIS NAVIGATION + THEME
-         These use unique names so app.js cannot override them.
-      ========================================================== */
+      /* =====================================================
+         GIS THEME
+      ===================================================== */
 
       function applyGisTheme(theme) {
         const body = document.body;
+
         const icon = document.getElementById("themeIcon");
 
         if (theme === "dark") {
           body.classList.remove("light-theme");
+
           body.classList.add("dark-theme");
+
           document.documentElement.classList.add("dark");
+
           localStorage.setItem("gis-theme", "dark");
 
           if (icon) {
@@ -551,8 +635,11 @@
           }
         } else {
           body.classList.remove("dark-theme");
+
           body.classList.add("light-theme");
+
           document.documentElement.classList.remove("dark");
+
           localStorage.setItem("gis-theme", "light");
 
           if (icon) {
@@ -563,10 +650,14 @@
 
       function gisToggleTheme() {
         const isDark = document.body.classList.contains("dark-theme");
+
         applyGisTheme(isDark ? "light" : "dark");
       }
 
-      // Restore the GIS theme without depending on app.js.
+      /* =====================================================
+         RESTORE GIS THEME
+      ===================================================== */
+
       document.addEventListener("DOMContentLoaded", function () {
         const savedTheme = localStorage.getItem("gis-theme");
 

@@ -32,6 +32,7 @@
 
   <body class="bg-slate-950 text-white min-h-screen">
     <!-- HEADER -->
+
     <header class="bg-slate-900 border-b border-slate-800">
       <div
         class="max-w-4xl mx-auto px-5 py-5 flex items-center justify-between"
@@ -55,17 +56,20 @@
           class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm"
         >
           <i class="fa-solid fa-house mr-1"></i>
+
           Home
         </a>
       </div>
     </header>
 
     <!-- MAIN -->
+
     <main class="max-w-4xl mx-auto px-4 py-8">
       <div
         class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl"
       >
         <!-- BOT HEADER -->
+
         <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-6 py-5">
           <h2 class="text-xl font-extrabold">🤖 AquaBot Assistant</h2>
 
@@ -76,11 +80,13 @@
         </div>
 
         <!-- CHAT -->
+
         <div
           id="chat"
           class="chat-scroll h-[55vh] overflow-y-auto p-5 space-y-4"
         >
           <!-- BOT MESSAGE -->
+
           <div class="flex">
             <div
               class="max-w-[85%] bg-slate-800 rounded-2xl rounded-tl-none px-4 py-3"
@@ -91,8 +97,11 @@
 
               <ul class="text-sm text-slate-300 mt-2 space-y-1">
                 <li>• Is Railway Underpass safe for my bike?</li>
+
                 <li>• What route is safer during flooding?</li>
+
                 <li>• What is the water level at Main Junction?</li>
+
                 <li>• Is it safe for an ambulance?</li>
               </ul>
             </div>
@@ -100,6 +109,7 @@
         </div>
 
         <!-- INPUT -->
+
         <div class="border-t border-slate-800 p-4">
           <div class="flex gap-3">
             <input
@@ -111,6 +121,7 @@
 
             <button
               id="sendBtn"
+              type="button"
               class="w-12 h-12 rounded-xl bg-cyan-600 hover:bg-cyan-500 flex items-center justify-center font-bold"
             >
               <i class="fa-solid fa-paper-plane"></i>
@@ -125,14 +136,20 @@
       </div>
     </main>
 
+    <!-- =====================================================
+         AQUABOT JAVASCRIPT
+    ====================================================== -->
+
     <script>
       const chat = document.getElementById("chat");
+
       const input = document.getElementById("botInput");
+
       const sendBtn = document.getElementById("sendBtn");
 
       /* -------------------------------------------------------
-   ADD MESSAGE
-------------------------------------------------------- */
+         ADD MESSAGE
+      ------------------------------------------------------- */
 
       function addMessage(text, type) {
         const wrapper = document.createElement("div");
@@ -141,30 +158,36 @@
           wrapper.className = "flex justify-end";
 
           wrapper.innerHTML = `
-            <div class="max-w-[85%]
-                        bg-blue-600
-                        rounded-2xl rounded-tr-none
-                        px-4 py-3">
+            <div
+              class="max-w-[85%]
+                     bg-blue-600
+                     rounded-2xl rounded-tr-none
+                     px-4 py-3"
+            >
 
-                <p class="text-sm">${escapeHtml(text)}</p>
+              <p class="text-sm">
+                ${escapeHtml(text)}
+              </p>
 
             </div>
-        `;
+          `;
         } else {
           wrapper.className = "flex";
 
           wrapper.innerHTML = `
-            <div class="max-w-[85%]
-                        bg-slate-800
-                        rounded-2xl rounded-tl-none
-                        px-4 py-3">
+            <div
+              class="max-w-[85%]
+                     bg-slate-800
+                     rounded-2xl rounded-tl-none
+                     px-4 py-3"
+            >
 
-                <p class="text-sm whitespace-pre-line">
-                    ${escapeHtml(text)}
-                </p>
+              <p class="text-sm whitespace-pre-line">
+                ${escapeHtml(text)}
+              </p>
 
             </div>
-        `;
+          `;
         }
 
         chat.appendChild(wrapper);
@@ -173,8 +196,8 @@
       }
 
       /* -------------------------------------------------------
-   BASIC HTML ESCAPE
-------------------------------------------------------- */
+         BASIC HTML ESCAPE
+      ------------------------------------------------------- */
 
       function escapeHtml(text) {
         const div = document.createElement("div");
@@ -185,13 +208,15 @@
       }
 
       /* -------------------------------------------------------
-   AQUABOT LOGIC
-------------------------------------------------------- */
+         AQUABOT LOGIC
+      ------------------------------------------------------- */
 
       function getBotResponse(question) {
         const q = question.toLowerCase();
 
-        /* RAILWAY UNDERPASS */
+        /* =====================================================
+           RAILWAY UNDERPASS
+        ====================================================== */
 
         if (q.includes("railway") || q.includes("underpass")) {
           if (
@@ -214,7 +239,9 @@
           );
         }
 
-        /* MAIN JUNCTION */
+        /* =====================================================
+           MAIN JUNCTION
+        ====================================================== */
 
         if (q.includes("main junction") || q.includes("junction")) {
           return (
@@ -225,7 +252,9 @@
           );
         }
 
-        /* SAFE ROUTE */
+        /* =====================================================
+           SAFE ROUTE
+        ====================================================== */
 
         if (
           q.includes("safe route") ||
@@ -239,7 +268,9 @@
           );
         }
 
-        /* AMBULANCE */
+        /* =====================================================
+           AMBULANCE
+        ====================================================== */
 
         if (q.includes("ambulance") || q.includes("emergency vehicle")) {
           return (
@@ -250,7 +281,9 @@
           );
         }
 
-        /* WATER LEVEL */
+        /* =====================================================
+           WATER LEVEL
+        ====================================================== */
 
         if (q.includes("water level") || q.includes("water depth")) {
           return (
@@ -262,7 +295,9 @@
           );
         }
 
-        /* FLOOD / SAFETY */
+        /* =====================================================
+           FLOOD / SAFETY
+        ====================================================== */
 
         if (
           q.includes("safe") ||
@@ -276,7 +311,9 @@
           );
         }
 
-        /* DEFAULT */
+        /* =====================================================
+           DEFAULT
+        ====================================================== */
 
         return (
           "🤖 I can help with flood and route safety.\n\n" +
@@ -289,8 +326,8 @@
       }
 
       /* -------------------------------------------------------
-   SEND MESSAGE
-------------------------------------------------------- */
+         SEND MESSAGE
+      ------------------------------------------------------- */
 
       function sendMessage() {
         const value = input.value.trim();
@@ -311,8 +348,8 @@
       }
 
       /* -------------------------------------------------------
-   EVENTS
-------------------------------------------------------- */
+         EVENTS
+      ------------------------------------------------------- */
 
       sendBtn.addEventListener("click", sendMessage);
 
