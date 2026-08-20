@@ -525,8 +525,9 @@
       function logout() {
         localStorage.removeItem("isCitizenLoggedIn");
         localStorage.removeItem("isOfficerLoggedIn");
+        localStorage.removeItem("user");
 
-        window.location.href = "index.html";
+        window.location.href = "login.html?role=citizen";
       }
     </script>
   </body>
