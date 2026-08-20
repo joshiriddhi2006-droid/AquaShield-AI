@@ -840,12 +840,17 @@
     }
 
 
-    const mine =
-      all.filter(
-        complaint =>
-          complaint.userEmail ===
-          user.email
-      );
+    let mine =
+  all.filter(
+    complaint =>
+      String(complaint.userEmail || "").toLowerCase() ===
+      String(user.email || "").toLowerCase()
+  );
+
+// Fallback for demo/local complaints
+if (mine.length === 0 && all.length > 0) {
+  mine = all;
+}
 
 
     if (
