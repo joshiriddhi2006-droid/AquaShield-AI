@@ -679,33 +679,6 @@
     }
 
 
-    if (
-      mine.length === 0 &&
-      all.length > 0
-    ) {
-
-      mine =
-        all;
-
-      if (name) {
-
-        name.textContent =
-          user?.name ||
-          "AquaShield Citizen";
-
-      }
-
-
-      if (email) {
-
-        email.textContent =
-          user?.email ||
-          "Local complaint history";
-
-      }
-
-    }
-
 
     if (
       mine.length === 0
@@ -833,15 +806,7 @@
 
 
     // Fallback for local/demo complaints
-    if (
-      mine.length === 0 &&
-      all.length > 0
-    ) {
-
-      mine =
-        all;
-
-    }
+    
 
 
     if (
