@@ -523,11 +523,16 @@
       }
 
       function logout() {
+        // Clear citizen/officer session flags.
         localStorage.removeItem("isCitizenLoggedIn");
         localStorage.removeItem("isOfficerLoggedIn");
         localStorage.removeItem("user");
 
-        window.location.href = "login.html?role=citizen";
+        // Return to the actual deployed AquaShield Citizen Home.
+        // Do not use login.html here because the current login.html
+        // is the Authority Login page.
+        window.location.href =
+          "https://aquashield-citizen.onrender.com/index.html";
       }
     </script>
   </body>
