@@ -401,15 +401,6 @@ By automating complaint analysis and routing while providing GIS-based navigatio
 
 This project was developed for academic and demonstration purposes.
 
-```
-
-### One recommendation
-
-Since you currently have **one confirmed live link**, I intentionally did **not** invent or add separate AI/Authority/GIS URLs. You can add those later when you confirm their exact deployed URLs.
-
-For the final submission, the most important link at the top is:
-
-**Citizen Portal:**  
 :contentReference[oaicite:0]{index=0}
 
 And your repository:
