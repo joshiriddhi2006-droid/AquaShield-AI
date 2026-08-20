@@ -1,175 +1,418 @@
-# AquaShield AI
+ 🛡️ AquaShield AI
 
 ## AI-Powered Water & Flood Hazard Complaint Management System
 
-AquaShield AI is an intelligent civic grievance management platform designed to help citizens report waterlogging, flooding, road hazards, and related emergencies. The system uses AI to analyse complaints, identify the appropriate category, department, priority, and severity, and route the complaint to the authority dashboard for action.
+AquaShield AI is an intelligent civic emergency and flood-management platform designed to help citizens report waterlogging and flood-related hazards while enabling authorities to analyse, prioritize, monitor and respond to incidents efficiently.
 
-## Problem Statement
+The system combines **AI-powered complaint analysis, citizen reporting, GIS-based safe-route navigation, emergency assistance, and an authority management dashboard** into a unified platform.
 
-During heavy rainfall and flooding, citizens often face difficulty reporting water-related hazards and reaching the correct authority. Complaints may be incomplete, incorrectly routed, or delayed, making emergency response difficult.
+---
 
-AquaShield AI provides a single intelligent platform for complaint registration, AI-based analysis, department routing, GIS monitoring, authority response, and complaint tracking.
+## 🚀 Live Project
 
-## Key Features
+### 👤 Citizen Portal
+🔗 https://aquashield-citizen.onrender.com/
 
-- AI-powered complaint analysis
-- Conversational complaint collection
-- Intelligent detection of missing complaint information
-- Complaint category classification
-- Automatic department prediction
-- Priority detection
-- Severity detection
-- Authority Dashboard for complaint management
-- GIS-based incident monitoring
-- Citizen complaint tracking
-- Emergency and ambulance assistance
-- Complaint ID generation
-- Local complaint history
-- Hindi/English-ready architecture for future multilingual expansion
+The Citizen Portal allows users to:
 
-## AI Workflow
+- Register waterlogging and flood-related complaints
+- Automatically capture their current GPS location
+- Describe complaints using natural language
+- Get AI-based complaint analysis
+- View complaint status and history
+- Access GIS-based safe route navigation
+- Use AquaBot for flood and emergency safety guidance
+- Access emergency assistance
 
+---
+
+## 🎯 Problem Statement
+
+Urban waterlogging and flooding can create serious risks for citizens, traffic and emergency services.
+
+Traditional complaint systems often require citizens to manually determine the appropriate department and provide detailed information before a complaint can be processed.
+
+AquaShield AI addresses this problem by providing an intelligent platform that can:
+
+- Capture citizen complaints quickly
+- Automatically analyse complaint descriptions
+- Identify the appropriate department
+- Determine complaint priority and severity
+- Capture geographical information
+- Support authority-side monitoring
+- Provide safer route guidance during flooding
+- Improve emergency response coordination
+
+---
+
+## 💡 Key Features
+
+### 👤 Citizen Portal
+
+- Citizen registration and login
+- Waterlogging and flood hazard reporting
+- GPS-based complaint location
+- Complaint history
+- Complaint status tracking
+- AI-assisted complaint registration
+- Emergency service access
+
+### 🤖 AI Complaint Intelligence
+
+AquaShield AI analyses the citizen's complaint and helps determine:
+
+- Complaint category
+- Responsible department
+- Priority
+- Severity
+- Nature of the reported hazard
+
+This reduces the need for citizens to manually determine where their complaint should be routed.
+
+### 🗺️ GIS Safe Route Navigation
+
+The GIS module provides:
+
+- Interactive map visualization
+- Current GPS location
+- Destination search
+- Route calculation
+- Vehicle-specific route selection
+- Flood-risk awareness
+- Standard and satellite map views
+- Google Maps navigation support
+
+Vehicle options include:
+
+- 🛵 2-Wheeler
+- 🚗 Sedan / Hatchback
+- 🛻 SUV
+- 🚒 Emergency / Rescue Vehicle
+
+### 🏛️ Authority Dashboard
+
+The authority-side system provides officials with centralized access to reported incidents.
+
+It supports:
+
+- Complaint monitoring
+- Complaint categorization
+- Priority and severity information
+- Department routing
+- Incident management
+- GIS-based monitoring
+- Response coordination
+- Complaint statistics and analytics
+
+### 🤖 AquaBot
+
+AquaBot is AquaShield's safety assistant that provides guidance related to:
+
+- Flood safety
+- Water levels
+- Safe routes
+- Alternate routes
+- Vehicle safety
+- Emergency vehicle access
+
+### 🚑 Emergency Assistance
+
+The platform provides direct access to emergency assistance information, including:
+
+- Ambulance services
+- Flood control support
+- Municipal emergency contacts
+
+---
+
+## 🔄 System Workflow
+
+```text
+                    Citizen
+                       │
+                       ▼
+              Complaint Registration
+                       │
+                       ▼
+                GPS Location
+                       │
+                       ▼
+             AquaShield AI Analysis
+                       │
+          ┌────────────┼────────────┐
+          ▼            ▼            ▼
+      Category     Department    Priority /
+                                  Severity
+          │            │            │
+          └────────────┼────────────┘
+                       ▼
+              Citizen Confirmation
+                       │
+                       ▼
+              Authority Dashboard
+                       │
+              ┌────────┴────────┐
+              ▼                 ▼
+          GIS Monitoring    Incident Management
+              │                 │
+              └────────┬────────┘
+                       ▼
+                Response & Resolution
+````
+
+---
+
+## 🧠 AI Processing Pipeline
+
+```text
 Citizen Complaint
-|
-v
-AquaShield AI Assistant
-|
-v
-Information Extraction
-|
-+---- Problem / Category
-+---- Location
-+---- Severity
-+---- Water Depth
-|
-v
-AI Classification
-|
-+---- Department
-+---- Priority
-+---- Severity
-|
-v
-Citizen Confirmation
-|
-v
+        │
+        ▼
+Natural Language Input
+        │
+        ▼
+Complaint Classification
+        │
+        ├── Category
+        │
+        ├── Department
+        │
+        ├── Priority
+        │
+        └── Severity
+        │
+        ▼
+Structured Complaint
+        │
+        ▼
 Authority Dashboard
-|
-v
-GIS Monitoring & Response
+```
 
-## AI Capabilities
+---
 
-### Complaint Classification
+## 🏗️ System Architecture
 
-The AI classifies complaints into categories such as:
+```text
+┌─────────────────────────────┐
+│       Citizen Portal        │
+│                             │
+│  Complaint │ Profile │ GIS  │
+│        AquaBot │ Emergency  │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│       AI Processing         │
+│                             │
+│ Category │ Department       │
+│ Priority │ Severity         │
+└──────────────┬──────────────┘
+               │
+               ▼
+┌─────────────────────────────┐
+│     Authority Dashboard     │
+│                             │
+│ Incidents │ Analytics       │
+│ GIS       │ Response        │
+└─────────────────────────────┘
+```
 
-- Waterlogging
-- Road Infrastructure
-- Traffic Safety
+---
 
-### Department Routing
+## 🧩 Main Modules
 
-Complaints are automatically mapped to the appropriate department, including:
+| Module              | Purpose                                           |
+| ------------------- | ------------------------------------------------- |
+| Citizen Portal      | Citizen complaint registration and tracking       |
+| AI Module           | Complaint classification and intelligent analysis |
+| GIS Module          | Flood-aware navigation and map visualization      |
+| Authority Dashboard | Incident monitoring and management                |
+| AquaBot             | Flood and emergency safety assistance             |
+| Emergency Services  | Quick access to emergency support                 |
 
-- Municipal / Water Management
-- Road & Public Works
-- Traffic & Emergency Management
+---
 
-### Priority & Severity
-
-The system analyses complaint language and contextual indicators such as flooding intensity, emergency vehicles, blocked roads, dangerous conditions, and water depth to determine priority and severity.
-
-### Intelligent Follow-up
-
-If a citizen provides an incomplete complaint such as:
-
-> "My road is flooded."
-
-AquaShield AI asks only for the missing information, such as the affected road/location or severity.
-
-If the citizen provides a complete complaint, the system proceeds directly to AI analysis without repeatedly asking for information already provided.
-
-## Authority Dashboard
-
-The Authority Dashboard provides officials with a centralized interface to:
-
-- View incoming complaints
-- Analyse complaint information
-- View AI-generated category and priority
-- Track complaint status
-- Monitor incidents
-- Access GIS-based information
-- Support emergency response
-
-## GIS Module
-
-The GIS module provides geographical visualization of reported incidents and supports location-based monitoring of water and flood hazards.
-
-## Emergency Services
-
-AquaShield includes an emergency assistance section providing quick access to ambulance and emergency services.
-
-## Technology Stack
+## 🛠️ Technology Stack
 
 ### Frontend
 
-- HTML
-- CSS
-- JavaScript
-- Tailwind CSS
+* HTML5
+* CSS3
+* JavaScript
+* Tailwind CSS
+* Font Awesome
+* Leaflet.js
 
-### AI Module
+### AI / Backend
 
-- Python
-- FastAPI
-- Scikit-learn
-- TF-IDF Vectorization
-- Logistic Regression
-
-### Dashboard & Backend
-
-- Python
-- Flask
-- REST APIs
+* Python
+* AI/NLP processing
+* REST APIs
+* Uvicorn / API services
 
 ### GIS
 
-- Python
-- GIS-based incident visualization
+* Leaflet
+* OpenStreetMap
+* Leaflet Routing Machine
+* GPS / Geolocation API
+* Satellite map layers
+* Google Maps integration
 
-### Storage
+### Data & Storage
 
-- Browser LocalStorage for citizen-side prototype complaint history
+* REST APIs
+* Browser Local Storage
+* Session Storage
+* Authority-side incident storage
 
-## Project Structure
+### Deployment
+
+* Render
+* GitHub
+
+---
+
+## 📁 Project Structure
 
 ```text
-AquaShield-main/
-│
-├── ai_module/
-│   ├── run_workflow.py
-│   └── ...
-│
-├── authority_dashboard/
-│   ├── aquashield_ai.py
-│   └── ...
+AquaShield-AI/
 │
 ├── frontend/
-│   ├── css/
-│   ├── js/
 │   ├── index.html
 │   ├── complaint.html
-│   ├── login.html
 │   ├── profile.html
-│   └── signup.html
+│   ├── login.html
+│   ├── aquabot.html
+│   ├── gis-map.html
+│   ├── app.js
+│   ├── gis-style.css
+│   └── js/
+│
+├── ai_module/
+│   └── AI processing and API services
+│
+├── authority_dashboard/
+│   └── Authority management system
 │
 ├── gis_module/
-│   ├── app.py
-│   └── ...
+│   └── GIS and route-related components
 │
-├── requirements.txt
-├── start_aquashield.bat
-├── stop_aquashield.bat
 └── README.md
+```
+
+---
+
+## 🔐 Citizen Complaint Privacy
+
+AquaShield maintains complaint ownership using the citizen's account information.
+
+Each citizen can access their own complaint history through the **My Complaints** section.
+
+Complaints belonging to other citizens are not displayed in a user's personal complaint history.
+
+---
+
+## 🌊 Example Use Case
+
+A citizen encounters severe waterlogging near a road.
+
+```text
+Citizen opens AquaShield
+        ↓
+Uses current GPS location
+        ↓
+Describes the waterlogging problem
+        ↓
+AquaShield AI analyses the complaint
+        ↓
+Category + Department + Priority + Severity
+        ↓
+Citizen confirms submission
+        ↓
+Complaint reaches Authority Dashboard
+        ↓
+Authority monitors the incident
+        ↓
+GIS helps identify affected areas
+        ↓
+Authorities can coordinate response
+```
+
+---
+
+## 🎓 Project Objective
+
+The objective of AquaShield AI is to provide a centralized and intelligent platform that connects citizens, AI-based complaint processing, GIS navigation and authorities for faster and more effective management of urban flood and waterlogging incidents.
+
+---
+
+## 👥 Project Team
+
+AquaShield AI was developed as a collaborative project involving multiple team members working across:
+
+* AI and NLP
+* Frontend Development
+* GIS and Navigation
+* Authority Dashboard
+* System Integration
+* UI/UX Design
+* Testing and Deployment
+
+---
+
+## 🔗 Project Links
+
+### Citizen Portal
+
+[https://aquashield-citizen.onrender.com/](https://aquashield-citizen.onrender.com/)
+
+### GitHub Repository
+
+[https://github.com/joshiriddhi2006-droid/AquaShield-AI](https://github.com/joshiriddhi2006-droid/AquaShield-AI)
+
+---
+
+## 🚀 Future Enhancements
+
+Potential future improvements include:
+
+* Multilingual citizen interface
+* Voice-based complaint registration
+* Real-time flood sensor integration
+* IoT water-level monitoring
+* Advanced predictive flood-risk modelling
+* Mobile application
+* Real-time authority notifications
+* Advanced city-wide flood prediction
+* Integration with additional emergency response systems
+
+---
+
+## 📌 Conclusion
+
+AquaShield AI combines **Artificial Intelligence, GIS, citizen reporting and emergency response management** into a unified platform for urban flood and waterlogging management.
+
+By automating complaint analysis and routing while providing GIS-based navigation and centralized authority monitoring, AquaShield aims to make emergency reporting and response more efficient, accessible and data-driven.
+
+---
+
+## 📄 License
+
+This project was developed for academic and demonstration purposes.
+
+```
+
+### One recommendation
+
+Since you currently have **one confirmed live link**, I intentionally did **not** invent or add separate AI/Authority/GIS URLs. You can add those later when you confirm their exact deployed URLs.
+
+For the final submission, the most important link at the top is:
+
+**Citizen Portal:**  
+:contentReference[oaicite:0]{index=0}
+
+And your repository:
+
+:contentReference[oaicite:1]{index=1}
 ```
