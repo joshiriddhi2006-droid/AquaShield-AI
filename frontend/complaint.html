@@ -718,7 +718,12 @@
           return false;
         }
 
-        if (!data.location || data.location.trim().length < 3) {
+        // If GPS/manual location has already been captured,
+        // do not ask the citizen to repeat a road or landmark.
+        const hasCapturedLocation =
+          complaint.location && complaint.location.trim().length >= 3;
+
+        if (!data.location && !hasCapturedLocation) {
           return false;
         }
 
@@ -742,9 +747,9 @@
           return;
         }
 
-        if (!data.location) {
+        if (!data.location && !complaint.location) {
           addMessage(
-            "📍 Which road or location is affected? Please provide the road name, area, landmark, or city.",
+            "📍 Please tap “Use My Current Location” so AquaShield can capture where the problem is.",
           );
 
           return;
@@ -926,6 +931,8 @@
 
           mergeComplaintData(data);
 
+          // Preserve GPS location even when the complaint text
+          // does not contain a road/landmark name.
           if (locationInput.value.trim()) {
             complaint.location = locationInput.value.trim();
           }
@@ -962,6 +969,11 @@
         const combinedData = extractComplaintData(complaint.description);
 
         mergeComplaintData(combinedData);
+
+        // GPS location remains valid without requiring a landmark.
+        if (locationInput.value.trim()) {
+          complaint.location = locationInput.value.trim();
+        }
 
         if (hasEnoughInformation(combinedData)) {
           analyzeComplaint();
