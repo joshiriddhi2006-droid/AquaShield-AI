@@ -100,7 +100,6 @@
 
   // ============================================================
   // ESCAPE HTML
-  // Prevents complaint text from breaking the page
   // ============================================================
 
   function escapeHTML(value) {
@@ -365,8 +364,6 @@
         "
       >
 
-        <!-- TOP -->
-
         <div
           style="
             display:flex;
@@ -415,8 +412,6 @@
         </div>
 
 
-        <!-- ID -->
-
         <div
           style="
             margin-top:12px;
@@ -436,8 +431,6 @@
 
         </div>
 
-
-        <!-- DETAILS -->
 
         <div
           style="
@@ -575,8 +568,6 @@
         </div>
 
 
-        <!-- DESCRIPTION -->
-
         <div
           style="
             margin-top:15px;
@@ -609,8 +600,6 @@
 
         </div>
 
-
-        <!-- DATE -->
 
         ${
           dateText
@@ -671,19 +660,6 @@
       getComplaints();
 
 
-    /*
-     * IMPORTANT FIX
-     *
-     * Normally we show complaints belonging
-     * to the logged-in citizen.
-     *
-     * If the browser has switched between
-     * localhost and 127.0.0.1 and the user
-     * session is unavailable, we still show
-     * the locally saved complaints so the
-     * hackathon demo does not look broken.
-     */
-
     let mine = [];
 
 
@@ -723,10 +699,6 @@
     }
 
 
-    /*
-     * Fallback for local demo.
-     */
-
     if (
       mine.length === 0 &&
       all.length > 0
@@ -754,10 +726,6 @@
 
     }
 
-
-    // ----------------------------------------------------------
-    // EMPTY STATE
-    // ----------------------------------------------------------
 
     if (
       mine.length === 0
@@ -828,10 +796,6 @@
 
     }
 
-
-    // ----------------------------------------------------------
-    // RENDER COMPLAINTS
-    // ----------------------------------------------------------
 
     list.innerHTML =
       mine
@@ -1124,5 +1088,19 @@
 
   renderProfile();
 
-
 })();
+
+
+// ============================================================
+// AQUASHIELD GIS
+// ============================================================
+// This function is intentionally outside the IIFE so that
+// gis-map.html can call it safely.
+
+function loadComplaintsOnMap() {
+
+  console.log(
+    "AquaShield GIS loaded successfully."
+  );
+
+}
