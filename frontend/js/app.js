@@ -414,26 +414,6 @@
 
         <div
           style="
-            margin-top:12px;
-            padding:10px 12px;
-            background:#f8fafc;
-            border-radius:9px;
-            color:#475569;
-            font-size:12px;
-          "
-        >
-
-          <strong>Complaint ID:</strong>
-
-          ${escapeHTML(
-            complaint.id || "Not available"
-          )}
-
-        </div>
-
-
-        <div
-          style="
             display:grid;
             grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
             gap:12px;
@@ -841,16 +821,27 @@
 
 
     let mine =
-  all.filter(
-    complaint =>
-      String(complaint.userEmail || "").toLowerCase() ===
-      String(user.email || "").toLowerCase()
-  );
+      all.filter(
+        complaint =>
+          String(
+            complaint.userEmail || ""
+          ).toLowerCase() ===
+          String(
+            user.email || ""
+          ).toLowerCase()
+      );
 
-// Fallback for demo/local complaints
-if (mine.length === 0 && all.length > 0) {
-  mine = all;
-}
+
+    // Fallback for local/demo complaints
+    if (
+      mine.length === 0 &&
+      all.length > 0
+    ) {
+
+      mine =
+        all;
+
+    }
 
 
     if (
@@ -868,8 +859,23 @@ if (mine.length === 0 && all.length > 0) {
     element.innerHTML =
       mine
         .map(
-          complaint =>
-            `
+          complaint => {
+
+            const submittedAt =
+              complaint.submittedAt
+                ? new Date(
+                    complaint.submittedAt
+                  ).toLocaleString(
+                    "en-IN",
+                    {
+                      dateStyle: "medium",
+                      timeStyle: "short"
+                    }
+                  )
+                : "Time not available";
+
+
+            return `
               <div class="card">
 
                 <strong>
@@ -882,22 +888,23 @@ if (mine.length === 0 && all.length > 0) {
 
                 <div class="muted">
 
-                  ID:
-                  ${escapeHTML(
-                    complaint.id
-                  )}
-
-                  • Status:
+                  Status:
 
                   ${escapeHTML(
                     complaint.status ||
                     "Submitted"
                   )}
 
+                  • ${escapeHTML(
+                    submittedAt
+                  )}
+
                 </div>
 
               </div>
-            `
+            `;
+
+          }
         )
         .join("");
 
