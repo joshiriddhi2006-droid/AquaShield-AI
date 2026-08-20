@@ -718,19 +718,14 @@
           return false;
         }
 
-        // If GPS/manual location has already been captured,
-        // do not ask the citizen to repeat a road or landmark.
-        const hasCapturedLocation =
-          complaint.location && complaint.location.trim().length >= 3;
-
-        if (!data.location && !hasCapturedLocation) {
+        // GPS is the location source. Never require a road,
+        // landmark, or location name in the complaint text.
+        if (!complaint.location || complaint.location.trim().length < 3) {
           return false;
         }
 
-        if (!data.severity && data.water === null) {
-          return false;
-        }
-
+        // Water depth is optional. AI can determine severity
+        // from the complaint itself when depth is not selected.
         return true;
       }
 
@@ -747,17 +742,9 @@
           return;
         }
 
-        if (!data.location && !complaint.location) {
+        if (!complaint.location || complaint.location.trim().length < 3) {
           addMessage(
-            "📍 Please tap “Use My Current Location” so AquaShield can capture where the problem is.",
-          );
-
-          return;
-        }
-
-        if (!data.severity && data.water === null) {
-          addMessage(
-            "⚠️ How serious is the situation? You can say Low, Medium, or High, give the water depth, or mention if vehicles or emergency services cannot pass.",
+            "📍 Please tap “Use My Current Location” first. Your live location will be captured automatically — you do not need to enter a road or landmark.",
           );
 
           return;
@@ -911,8 +898,9 @@
         if (!complaint.description) {
           complaint.description = value;
 
-          if (locationInput.value.trim()) {
-            complaint.location = locationInput.value.trim();
+          if (complaint.location) {
+            // GPS location remains unchanged.
+            complaint.location = complaint.location.trim();
           }
 
           if (waterDepthSelect.value) {
@@ -929,13 +917,12 @@
 
           const data = extractComplaintData(value);
 
+          // Keep GPS as the only location source.
+          const gpsLocation = complaint.location;
+
           mergeComplaintData(data);
 
-          // Preserve GPS location even when the complaint text
-          // does not contain a road/landmark name.
-          if (locationInput.value.trim()) {
-            complaint.location = locationInput.value.trim();
-          }
+          complaint.location = gpsLocation;
 
           if (waterDepthSelect.value) {
             complaint.water_cm = Number(waterDepthSelect.value);
@@ -968,12 +955,12 @@
 
         const combinedData = extractComplaintData(complaint.description);
 
+        const gpsLocation = complaint.location;
+
         mergeComplaintData(combinedData);
 
-        // GPS location remains valid without requiring a landmark.
-        if (locationInput.value.trim()) {
-          complaint.location = locationInput.value.trim();
-        }
+        // GPS remains the only location source.
+        complaint.location = gpsLocation;
 
         if (hasEnoughInformation(combinedData)) {
           analyzeComplaint();
