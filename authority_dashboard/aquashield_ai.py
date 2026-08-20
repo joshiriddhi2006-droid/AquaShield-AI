@@ -44,6 +44,46 @@ def get_incident(iid):
 def api_health():
     return jsonify({"service": "AquaShield Authority", "status": "healthy"})
 
+@app.route("/api/incidents", methods=["GET"])
+def get_incidents():
+    """Public read-only incident feed for the Citizen portal and GIS."""
+    return jsonify({
+        "success": True,
+        "incidents": INCIDENTS,
+        "count": len(INCIDENTS)
+    }), 200
+
+
+@app.route("/api/public-stats", methods=["GET"])
+def public_stats():
+    """Live aggregate statistics for the Citizen home page."""
+    total = len(INCIDENTS)
+    resolved = sum(
+        str(i.get("status", "")).lower() in ("resolved", "closed")
+        for i in INCIDENTS
+    )
+    active = total - resolved
+    registered = sum(
+        str(i.get("status", "")).lower() not in ("resolved", "closed")
+        for i in INCIDENTS
+    )
+    high = sum(str(i.get("risk", "")).upper() in ("HIGH", "CRITICAL") for i in INCIDENTS)
+    medium = sum(str(i.get("risk", "")).upper() in ("MEDIUM", "MODERATE") for i in INCIDENTS)
+    low = sum(str(i.get("risk", "")).upper() in ("LOW", "SAFE") for i in INCIDENTS)
+
+    return jsonify({
+        "success": True,
+        "total": total,
+        "registered": registered,
+        "active": active,
+        "solved": resolved,
+        "high": high,
+        "medium": medium,
+        "low": low,
+        "updated_at": datetime.now().isoformat()
+    }), 200
+
+
 @app.route("/api/incidents", methods=["POST"])
 def receive_incident():
     data = request.get_json(silent=True) or request.form.to_dict() or {}
@@ -51,16 +91,21 @@ def receive_incident():
     location = data.get("location") or data.get("area") or "Unknown Location"
     depth = data.get("depth", "medium")
     
-    if isinstance(data.get("water"), (int, float)):
-        water = int(data.get("water"))
-    else:
+    raw_water = data.get("water", data.get("water_cm"))
+
+    try:
+        if raw_water not in (None, ""):
+            water = int(float(raw_water))
+        else:
+            raise ValueError
+    except (TypeError, ValueError):
         depth_map = {"low": 12, "medium": 28, "high": 55, "extreme": 85}
         water = depth_map.get(str(depth).lower(), 25)
 
-    department = data.get("type") or "Citizen Flood Complaint"
+    department = data.get("type") or data.get("department") or "Citizen Flood Complaint"
     status = "Under Review"
     description = data.get("description") or data.get("details") or "Reported by Citizen via AquaShield Complaint Portal"
-    timestamp = data.get("timestamp") or datetime.now().strftime("%I:%M %p")
+    timestamp = data.get("timestamp") or data.get("reported") or datetime.now().strftime("%I:%M %p")
 
     incident = {
         "id": next_id(),
@@ -75,7 +120,8 @@ def receive_incident():
         "severity": data.get("severity", "Medium"),
         "source": data.get("source", "Citizen + AquaShield AI"),
         "officer": "Unassigned",
-        "reported": timestamp
+        "reported": timestamp,
+        "timestamp": datetime.now().isoformat()
     }
 
     INCIDENTS.insert(0, incident)
@@ -182,12 +228,30 @@ PAGE = """<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport"
     <span>🌧️ Monsoon Response • Live Flood Intelligence System</span>
     <div style="display: flex; align-items: center; gap: 18px;">
         <span class="online"><span class="green-dot"></span>Authority Control Room Active</span>
+        <span id="live-clock" style="font-weight:600;color:#cbd5e1;"></span>
         <a href="{{ url_for('logout') }}" class="btn red" style="padding: 6px 14px; font-size: 12px; text-decoration: none;">🚪 Logout</a>
     </div>
 </div>
 <div class="content">
 {% with messages=get_flashed_messages() %}{% for message in messages %}<div class="flash">✅ {{message}}</div>{% endfor %}{% endwith %}
 {{body|safe}}</div></div>
+<script>
+(function () {
+  function updateLiveClock() {
+    const el = document.getElementById("live-clock");
+    if (!el) return;
+    const now = new Date();
+    el.textContent = "🕒 " + now.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  }
+
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
+})();
+</script>
 </body></html>"""
 
 # ----------------- DIRECT DASHBOARD ROUTES -----------------
