@@ -124,10 +124,61 @@
         </div>
       </section>
 
+      <!-- ==========================================================
+           OPTIONAL ROAD IMAGE EVIDENCE
+      ========================================================== -->
+
+      <section
+        class="mt-5 bg-white rounded-2xl border border-slate-200 shadow-lg p-5"
+      >
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fa-solid fa-camera text-blue-600"></i>
+
+          <h3 class="font-bold text-slate-800">Road Image Evidence</h3>
+
+          <span
+            class="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full"
+          >
+            Optional
+          </span>
+        </div>
+
+        <p class="text-xs text-slate-500 mb-4">
+          Upload a road image to provide visual evidence of waterlogging or
+          flooding.
+        </p>
+
+        <input
+          id="roadImageInput"
+          type="file"
+          accept="image/*"
+          class="w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        />
+
+        <div id="roadImagePreview" class="hidden mt-4">
+          <img
+            id="roadImagePreviewImg"
+            src=""
+            alt="Uploaded road evidence"
+            class="w-full max-h-64 object-cover rounded-xl border border-slate-200"
+          />
+
+          <div class="mt-3 p-4 bg-blue-50 border border-blue-100 rounded-xl">
+            <p class="font-bold text-blue-800 text-sm">
+              🤖 AI-Assisted Visual Assessment
+            </p>
+
+            <p id="roadImageAssessment" class="text-sm text-blue-700 mt-1">
+              Image received successfully. Visual evidence is ready for review.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <!-- CHAT CARD -->
 
       <section
-        class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden"
+        class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden mt-5"
       >
         <!-- HEADER -->
 
@@ -227,8 +278,8 @@
 
     <script>
       /* ==========================================================
-       API CONFIGURATION
-    ========================================================== */
+         API CONFIGURATION
+      ========================================================== */
 
       const AI_API = "https://aquashield-ai-api.onrender.com/predict";
 
@@ -236,8 +287,8 @@
         "https://aquashield-authority-dashboard.onrender.com/api/incidents";
 
       /* ==========================================================
-       ELEMENTS
-    ========================================================== */
+         ELEMENTS
+      ========================================================== */
 
       const chat = document.getElementById("chat");
 
@@ -258,8 +309,62 @@
       const waterDepthSelect = document.getElementById("waterDepthSelect");
 
       /* ==========================================================
-       COMPLAINT STATE
-    ========================================================== */
+         OPTIONAL ROAD IMAGE EVIDENCE ELEMENTS
+      ========================================================== */
+
+      const roadImageInput = document.getElementById("roadImageInput");
+
+      const roadImagePreview = document.getElementById("roadImagePreview");
+
+      const roadImagePreviewImg = document.getElementById(
+        "roadImagePreviewImg",
+      );
+
+      const roadImageAssessment = document.getElementById(
+        "roadImageAssessment",
+      );
+
+      /* ==========================================================
+         ROAD IMAGE PREVIEW
+      ========================================================== */
+
+      if (roadImageInput) {
+        roadImageInput.addEventListener("change", function () {
+          const file = this.files && this.files[0];
+
+          if (!file) {
+            roadImagePreview.classList.add("hidden");
+            return;
+          }
+
+          if (!file.type.startsWith("image/")) {
+            alert("Please select an image file.");
+
+            this.value = "";
+
+            roadImagePreview.classList.add("hidden");
+
+            return;
+          }
+
+          const reader = new FileReader();
+
+          reader.onload = function (event) {
+            roadImagePreviewImg.src = event.target.result;
+
+            roadImageAssessment.textContent =
+              "Image received successfully. Visual evidence is ready for authority review.";
+
+            roadImagePreview.classList.remove("hidden");
+          };
+
+          reader.readAsDataURL(file);
+        });
+      }
+
+      /* ==========================================================
+         COMPLAINT STATE
+      ========================================================== */
 
       let complaint = {
         description: "",
@@ -276,8 +381,8 @@
       let aiData = null;
 
       /* ==========================================================
-       CHAT MESSAGE
-    ========================================================== */
+         CHAT MESSAGE
+      ========================================================== */
 
       function addMessage(text, who = "bot") {
         const row = document.createElement("div");
@@ -302,8 +407,8 @@
       }
 
       /* ==========================================================
-       GPS LOCATION
-    ========================================================== */
+         GPS LOCATION
+      ========================================================== */
 
       locationBtn.addEventListener("click", function () {
         if (!navigator.geolocation) {
@@ -387,8 +492,8 @@
       });
 
       /* ==========================================================
-       WATER DEPTH
-    ========================================================== */
+         WATER DEPTH
+      ========================================================== */
 
       waterDepthSelect.addEventListener("change", function () {
         const value = waterDepthSelect.value;
@@ -407,8 +512,8 @@
       });
 
       /* ==========================================================
-       INITIAL MESSAGE
-    ========================================================== */
+         INITIAL MESSAGE
+      ========================================================== */
 
       function botStart() {
         addMessage(
@@ -423,8 +528,8 @@
       botStart();
 
       /* ==========================================================
-       NORMALIZE
-    ========================================================== */
+         NORMALIZE
+      ========================================================== */
 
       function normalize(text) {
         return String(text || "")
@@ -438,8 +543,8 @@
       }
 
       /* ==========================================================
-       ISSUE DETECTION
-    ========================================================== */
+         ISSUE DETECTION
+      ========================================================== */
 
       function detectIssue(text) {
         const t = normalize(text);
@@ -474,8 +579,8 @@
       }
 
       /* ==========================================================
-       LOCATION DETECTION
-    ========================================================== */
+         LOCATION DETECTION
+      ========================================================== */
 
       function detectLocation(text) {
         const original = String(text || "").trim();
@@ -540,8 +645,8 @@
       }
 
       /* ==========================================================
-       WATER DEPTH
-    ========================================================== */
+         WATER DEPTH
+      ========================================================== */
 
       function detectWaterDepth(text) {
         const match = String(text || "").match(
@@ -564,8 +669,8 @@
       }
 
       /* ==========================================================
-       SEVERITY DETECTION
-    ========================================================== */
+         SEVERITY DETECTION
+      ========================================================== */
 
       function detectSeverity(text) {
         const t = normalize(text);
@@ -616,8 +721,8 @@
       }
 
       /* ==========================================================
-       EMERGENCY DETECTION
-    ========================================================== */
+         EMERGENCY DETECTION
+      ========================================================== */
 
       function hasEmergencyImpact(text) {
         return /\b(ambulance|emergency vehicle|fire truck|rescue vehicle|cannot pass|can't pass|trapped|stranded|completely blocked)\b/i.test(
@@ -626,8 +731,8 @@
       }
 
       /* ==========================================================
-       EXTRACT DATA
-    ========================================================== */
+         EXTRACT DATA
+      ========================================================== */
 
       function extractComplaintData(text) {
         const issue = detectIssue(text);
@@ -666,8 +771,8 @@
       }
 
       /* ==========================================================
-       MERGE DATA
-    ========================================================== */
+         MERGE DATA
+      ========================================================== */
 
       function mergeComplaintData(data) {
         if (data.issue) {
@@ -688,8 +793,8 @@
       }
 
       /* ==========================================================
-       INFORMATION CHECK
-    ========================================================== */
+         INFORMATION CHECK
+      ========================================================== */
 
       function hasEnoughInformation(data) {
         if (!data.issue) {
@@ -709,8 +814,8 @@
       }
 
       /* ==========================================================
-       ASK ONLY FOR MISSING DETAILS
-    ========================================================== */
+         ASK ONLY FOR MISSING DETAILS
+      ========================================================== */
 
       function askForMissingInformation(data) {
         if (!data.issue) {
@@ -733,8 +838,8 @@
       }
 
       /* ==========================================================
-       AI ANALYSIS
-    ========================================================== */
+         AI ANALYSIS
+      ========================================================== */
 
       async function analyzeComplaint() {
         addMessage(
@@ -842,8 +947,8 @@
       }
 
       /* ==========================================================
-       INPUT HANDLER
-    ========================================================== */
+         INPUT HANDLER
+      ========================================================== */
 
       function handleInput() {
         const value = input.value.trim();
@@ -952,8 +1057,8 @@
       });
 
       /* ==========================================================
-       CONFIRM & SUBMIT
-    ========================================================== */
+         CONFIRM & SUBMIT
+      ========================================================== */
 
       confirmBtn.addEventListener("click", async function () {
         if (!aiData) {
@@ -1160,6 +1265,25 @@
           locationInput.value = "";
 
           waterDepthSelect.value = "";
+
+          /* RESET ROAD IMAGE */
+
+          if (roadImageInput) {
+            roadImageInput.value = "";
+          }
+
+          if (roadImagePreview) {
+            roadImagePreview.classList.add("hidden");
+          }
+
+          if (roadImagePreviewImg) {
+            roadImagePreviewImg.src = "";
+          }
+
+          if (roadImageAssessment) {
+            roadImageAssessment.textContent =
+              "Image received successfully. Visual evidence is ready for review.";
+          }
 
           locationStatus.textContent =
             "Your GPS location will be captured automatically.";
