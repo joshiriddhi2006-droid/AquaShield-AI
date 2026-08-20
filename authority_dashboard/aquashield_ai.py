@@ -204,8 +204,10 @@ def dashboard():
 
 @app.route("/logout")
 def logout():
-    flash("Logged out successfully.")
-    return redirect("/index")  # Isse dashboard par rehne ki jagah index page khulega
+    session.clear()
+    return redirect(
+        "https://aquashield-citizen.onrender.com/login.html?role=authority"
+    )
 
 @app.route("/incidents")
 def incidents():
