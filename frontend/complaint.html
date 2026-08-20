@@ -1240,21 +1240,11 @@
           });
 
           /* ====================================================
-         OPEN GIS IN NEW TAB
+         SUCCESS COMPLETE
+         The complaint stays on this page.
+         The citizen can open the new GIS separately from
+         the Safe Route Finder on the AquaShield portal.
       ==================================================== */
-
-          try {
-            const gisUrl =
-              "https://aquashield-gis.onrender.com/?" +
-              "category=" +
-              encodeURIComponent(savedComplaint.aiAnalysis.category) +
-              "&title=" +
-              encodeURIComponent(savedComplaint.aiAnalysis.category);
-
-            window.open(gisUrl, "_blank");
-          } catch (gisError) {
-            console.log("GIS could not be opened:", gisError);
-          }
         } catch (error) {
           console.error("SUBMISSION ERROR:", error);
 
