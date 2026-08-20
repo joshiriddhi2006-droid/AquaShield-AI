@@ -109,13 +109,13 @@
           <i class="fa-solid fa-house"></i> Home
         </a>
 
-        <button
+        <a
+          href="https://aquashield-citizen.onrender.com/"
           class="btn btn-red"
-          style="padding: 4px 10px; font-size: 0.8rem"
-          onclick="gisLogout()"
+          style="padding: 4px 10px; font-size: 0.8rem; text-decoration: none"
         >
           Logout
-        </button>
+        </a>
 
         <button
           id="gisThemeBtn"
@@ -535,17 +535,6 @@
          GIS NAVIGATION + THEME
          These use unique names so app.js cannot override them.
       ========================================================== */
-
-      function gisLogout() {
-        localStorage.removeItem("isCitizenLoggedIn");
-        localStorage.removeItem("isOfficerLoggedIn");
-        localStorage.removeItem("user");
-
-        // Always return to the deployed Citizen Home.
-        window.location.replace(
-          "https://aquashield-citizen.onrender.com/index.html",
-        );
-      }
 
       function applyGisTheme(theme) {
         const body = document.body;
